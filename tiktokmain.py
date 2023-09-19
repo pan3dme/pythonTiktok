@@ -15,9 +15,12 @@ from PyQt5.QtWidgets import QMainWindow, QTreeWidget, QWidget, QMenu, QLabel
 
 from Lesson_01.mainmousekey import MainWindowMouseKey
 from Lesson_01.video_deep_qthread import VideoDeepQthread
-from ui_mainwindow import Ui_MainWindow
+
 from PyQt5 import QtWidgets, QtCore
-from video_run_qthread import VideoRunQThread
+
+from Lesson_01.video_run_qthread import VideoRunQThread
+
+
 # 主窗体类
 
 class MyQLabel(QLabel):
