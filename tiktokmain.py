@@ -16,6 +16,7 @@ from PyQt5.QtGui import QPixmap, QPainter, QLinearGradient, QColor, QImage
 from PyQt5.QtWidgets import QMainWindow, QTreeWidget, QWidget, QMenu, QLabel
 
 from Lesson_01.mainmousekey import MainWindowMouseKey
+from Lesson_01.ui_mainwindow import Ui_MainWindow
 from Lesson_01.video_deep_qthread import VideoDeepQthread
 
 from PyQt5 import QtWidgets, QtCore
@@ -23,43 +24,14 @@ from PyQt5 import QtWidgets, QtCore
 from Lesson_01.video_run_qthread import VideoRunQThread
 
 
-# 主窗体类
-
-class MyQLabel(QLabel):
-    button_clicked_signal = QtCore.pyqtSignal()
-
-
-
-    def mouseReleaseEvent(self, QMouseEvent):
-        self.button_clicked_signal.emit()
-
-    def connect_customized_slot(self, func):
-        self.button_clicked_signal.connect(func)
-
-    def paintEvent(self, event):  # 绘制重写
-        line = QLinearGradient(QPoint(0, 0), QPoint(1920, 1080))
-        line.setColorAt(0, Qt.black)
-        line.setColorAt(1, Qt.red)
-        painter = QPainter(self)
-        painter.setBrush(line)
-        rect2 = QRect(0, 0, 1920 - 1, 1080 - 1)
-        painter.setPen(QColor(255, 255, 255))  # 画笔
-        painter.drawRect(rect2)
-        painter.drawEllipse(QRect(int(1920 / 2) - int(1080 / 2), 0, 1080 - 2, 1080 - 2))  # 圆
-        painter.drawLine(int(1920 / 2), 0, int(1920 / 2), 1080)
-        painter.drawLine(0, int(1080 / 2), 1920, int(1080 / 2))
-
-class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
+class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         self.runQthread=None
         self.deepQthread=None
-        # 定义字符
-        self.hello = ["Hallo Welt", "Hei maailma", "Hola Mundo", "Привет мир", "Hello world"]
 
-        # 添加槽链接[[
         self.pushButton.clicked.connect(self.magic)
         self.reseTrackerBut.clicked.connect(self.reseTrackerButClik)
         self.toolButton.clicked.connect(self.selectFileClik)
@@ -75,8 +47,6 @@ class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
 
         self.initData()
 
-        self.m_label = MyQLabel()
-        self.m_label.connect_customized_slot(self.labelClik)
 
         self.horizontalSlider.valueChanged.connect(self.valuechange)
 
@@ -115,7 +85,7 @@ class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
         print('clearbutClik')
         self.deepQthread.resetYoloDetector()
         self.runQthread.setVideoPath(None)
-        time.sleep(3)
+        time.sleep(1)
         print('重新开始')
     def hikcamhisitoryClik(self):
         time_str = self.timeEdit.time().toString('hh:mm:ss')
@@ -132,9 +102,7 @@ class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
         url = "rtsp://admin:Hik123456@192.168.31.212/Streaming/Channels/2"
         self.pushSelectFile(url)
         pass
-    def labelClik(self):
-        print('labelClik')
-        pass
+
 
     def show_frame_pic(self, value):
 
@@ -202,16 +170,8 @@ class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
         print(rect)
         pass
 
-# pyside6-uic mainwindow.ui > ui_mainwindow.py
-
-
-# from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
-# from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget
-
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()
-
-
     sys.exit(app.exec())
