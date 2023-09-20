@@ -11,11 +11,12 @@ from dele.fps_mc import FpsMc
 class VideoRunQThread(QThread):
     sendFrameInfo = pyqtSignal(list)
     send_info = pyqtSignal(str)
-    show_pic = pyqtSignal(QImage)
+    show_pic = pyqtSignal(list)
 
     def __init__(self):
         super(VideoRunQThread, self).__init__()
         self.pause_process=False
+        self.selectROIFrame=None
         self.cap=None
         self.CacheWaitArr=[]
         self.CacheNum10=10
@@ -97,6 +98,7 @@ class VideoRunQThread(QThread):
                 # print(self.cap.get(cv2.CAP_PROP_POS_FRAMES),self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 ret, capframe = self.cap.read()
                 if ret:
+                    self.selectROIFrame=capframe
                     baseFrame = cv2.resize(capframe, (500,350))
                     rectFrame = cv2.resize(capframe, (500,350))
 
@@ -109,8 +111,8 @@ class VideoRunQThread(QThread):
 
                     # self.fpsMc.showFps(show,tx=150,ty=25,scaleFont=0.7)
 
-                    showImage = QImage(show.data, show.shape[1], show.shape[0], QImage.Format_RGB888)
-                    self.show_pic.emit(showImage)
+
+                    self.show_pic.emit([show])
 
                 skipNum = time.time() - tm
                 skipNum = max(0, ( 1.0/self.fpsPlayNum10-skipNum))

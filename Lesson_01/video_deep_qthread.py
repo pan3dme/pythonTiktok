@@ -18,7 +18,7 @@ from src.models.detection.yolov8_detector_onnx import YoloDetector
 
 
 class VideoDeepQthread(QThread):
-    showDeepFrame = pyqtSignal(QImage)
+    showDeepFrame = pyqtSignal(list)
 
     def filter_img(self, frame):
         kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (3, 3))
@@ -95,22 +95,22 @@ class VideoDeepQthread(QThread):
         baseFrame = self.waitFrameUrlArr[0][0]
         frame = self.waitFrameUrlArr[0][1]
         del self.waitFrameUrlArr[0]
-        showFrame=frame
 
-        # model_output = self.detector.inference(frame, self.confi_thr, self.iou_thr)
-        # model_output = self.tracker.update(
-        #     detection_results=model_output,
-        #     ori_img=frame)
-        # model_output = add_image_id(model_output, frame_id)
-        #
-        # showFrame = self.draw_results(frame, model_output)
 
-        fileUrl = 'out/kkk/' + str(self.skipnum) + '.jpg'
-        self.skipnum+=1
-        self.makedir(fileUrl)
-        cv2.imwrite(fileUrl, showFrame)
-        qImage=QImage(showFrame.data, showFrame.shape[1], showFrame.shape[0], QImage.Format_RGB888)
-        self.showDeepFrame.emit(qImage)
+        model_output = self.detector.inference(frame, self.confi_thr, self.iou_thr)
+        model_output = self.tracker.update(
+            detection_results=model_output,
+            ori_img=frame)
+        model_output = add_image_id(model_output, frame_id)
+
+        showFrame = self.draw_results(frame, model_output)
+
+        # fileUrl = 'out/kkk/' + str(self.skipnum) + '.jpg'
+        # self.skipnum+=1
+        # self.makedir(fileUrl)
+        # cv2.imwrite(fileUrl, showFrame)
+        # qImage=QImage(showFrame.data, showFrame.shape[1], showFrame.shape[0], QImage.Format_RGB888)
+        self.showDeepFrame.emit([showFrame])
 
 
     def run(self):
@@ -124,7 +124,7 @@ class VideoDeepQthread(QThread):
                     self.runTemp(frame_id)
                     print('wait', len(self.waitFrameUrlArr))
                     frame_id += 1
-                    time.sleep(1.01)
+                    time.sleep(0.3)
                 else:
                     time.sleep(1.0)
 
