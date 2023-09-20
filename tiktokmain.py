@@ -7,6 +7,7 @@
 
 import sys
 import random
+import time
 from datetime import datetime
 
 from PyQt5.QtCore import QEvent, Qt, QTimer, pyqtSignal, QPoint, QRect, QDate, QTime
@@ -63,6 +64,7 @@ class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
         self.toolButton.clicked.connect(self.selectFileClik)
         self.hikcambut.clicked.connect(self.hikcambutClik)
         self.hikcamhisitory.clicked.connect(self.hikcamhisitoryClik)
+        self.clearbut.clicked.connect(self.clearbutClik)
 
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
@@ -108,6 +110,12 @@ class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
 
         self.timeEdit.setTime(qt)
 
+    def clearbutClik(self):
+        print('clearbutClik')
+        self.deepQthread.resetYoloDetector()
+        self.runQthread.setVideoPath(None)
+        time.sleep(3)
+        print('重新开始')
     def hikcamhisitoryClik(self):
         time_str = self.timeEdit.time().toString('hh:mm:ss')
         date_str = self.dateEdit.date().toString('yyyy-MM-dd')
@@ -160,8 +168,10 @@ class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
 
 
     def pushSelectFile(self,value):
-        self.runQthread.setVideoPath(value)
         self.deepQthread.resetYoloDetector()
+        self.runQthread.setVideoPath(value)
+
+
 
     def selectFileClik(self):
 
@@ -176,7 +186,8 @@ class MainWindow(QtWidgets.QMainWindow,MainWindowMouseKey):
             pass
 
     def reseTrackerButClik(self):
-        self.deepQthread.resetYoloDetector()
+        # self.deepQthread.resetYoloDetector()
+        # self.runQthread.setVideoPath(None)
         pass
     def magic(self):
         # 随机选取

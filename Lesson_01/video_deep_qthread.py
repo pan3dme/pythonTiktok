@@ -2,6 +2,8 @@ import json
 import math
 import os
 import time
+
+import cv2
 import cv2 as cv
 import numpy as np
 
@@ -66,14 +68,13 @@ class VideoDeepQthread(QThread):
         self.confi_thr = confidence_threshold
         self.iou_thr = iou_threshold
         self.model_name = model_name
-        # self._init_yolo()
-        # self._init_tracker()
-
-    def resetYoloDetector(self):
-        self.waitFrameUrlArr = []
         self._init_yolo()
         self._init_tracker()
 
+
+    def resetYoloDetector(self):
+        self.waitFrameUrlArr.clear()
+        print('resetYoloDetector')
 
     def _init_yolo(self):
         self.detector = YoloDetector()
@@ -88,21 +89,26 @@ class VideoDeepQthread(QThread):
         self.tracker = DeepSort(
             model_path=os.path.join(ROOT, f"src/models/tracking/deep_sort/deep/checkpoint/ckpt.t7"))
 
+    skipnum=0
     def runTemp(self, frame_id):
 
         baseFrame = self.waitFrameUrlArr[0][0]
         frame = self.waitFrameUrlArr[0][1]
         del self.waitFrameUrlArr[0]
+        showFrame=frame
 
-        model_output = self.detector.inference(frame, self.confi_thr, self.iou_thr)
-        model_output = self.tracker.update(
-            detection_results=model_output,
-            ori_img=frame)
-        model_output = add_image_id(model_output, frame_id)
+        # model_output = self.detector.inference(frame, self.confi_thr, self.iou_thr)
+        # model_output = self.tracker.update(
+        #     detection_results=model_output,
+        #     ori_img=frame)
+        # model_output = add_image_id(model_output, frame_id)
+        #
+        # showFrame = self.draw_results(frame, model_output)
 
-        showFrame = self.draw_results(frame, model_output)
-
-
+        fileUrl = 'out/kkk/' + str(self.skipnum) + '.jpg'
+        self.skipnum+=1
+        self.makedir(fileUrl)
+        cv2.imwrite(fileUrl, showFrame)
         qImage=QImage(showFrame.data, showFrame.shape[1], showFrame.shape[0], QImage.Format_RGB888)
         self.showDeepFrame.emit(qImage)
 
@@ -118,7 +124,7 @@ class VideoDeepQthread(QThread):
                     self.runTemp(frame_id)
                     print('wait', len(self.waitFrameUrlArr))
                     frame_id += 1
-                    time.sleep(0.2)
+                    time.sleep(1.01)
                 else:
                     time.sleep(1.0)
 

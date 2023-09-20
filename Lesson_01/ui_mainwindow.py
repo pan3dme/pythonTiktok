@@ -8,7 +8,6 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-
 from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
 from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget, QRadioButton, QCheckBox, QComboBox, QTimeEdit, \
     QDateEdit, QSlider
@@ -82,6 +81,9 @@ class Ui_MainWindow(object):
         self.horizontalSlider.setMaximum(30)
         self.horizontalSlider.setValue(10)
         self.horizontalSlider.setOrientation(Qt.Horizontal)
+        self.clearbut = QPushButton(self.centralwidget)
+        self.clearbut.setObjectName(u"clearbut")
+        self.clearbut.setGeometry(QRect(200, 810, 91, 41))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -111,5 +113,6 @@ class Ui_MainWindow(object):
         self.reseTrackerBut.setText(QCoreApplication.translate("MainWindow", u"\u91cd\u65b0\u68c0\u6d4b", None))
         self.hikcambut.setText(QCoreApplication.translate("MainWindow", u"\u65f6\u65f6\u76d1\u63a7", None))
         self.hikcamhisitory.setText(QCoreApplication.translate("MainWindow", u"\u76d1\u63a7\u5f55\u50cf", None))
+        self.clearbut.setText(QCoreApplication.translate("MainWindow", u"\u6e05\u7406\u6240\u6709\u8fdb\u7a0b", None))
     # retranslateUi
 

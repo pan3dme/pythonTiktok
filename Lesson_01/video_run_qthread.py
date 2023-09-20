@@ -32,9 +32,11 @@ class VideoRunQThread(QThread):
         return dilated
     def setVideoPath(self, url):
         self.pause_process=True
-        self.cap = None
-        self.cap = cv2.VideoCapture(url)
-        self.pause_process = False
+        if url is None:
+            pass
+        else:
+            self.cap = cv2.VideoCapture(url)
+            self.pause_process = False
 
     def makeHikHostoryByTm(self,tm):
         # tm = datetime(2023, 9, 16, 18, 24, 40)
@@ -105,7 +107,7 @@ class VideoRunQThread(QThread):
 
                     show=baseFrame
 
-                    self.fpsMc.showFps(show,tx=150,ty=25,scaleFont=0.7)
+                    # self.fpsMc.showFps(show,tx=150,ty=25,scaleFont=0.7)
 
                     showImage = QImage(show.data, show.shape[1], show.shape[0], QImage.Format_RGB888)
                     self.show_pic.emit(showImage)
