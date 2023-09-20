@@ -3,13 +3,11 @@ import math
 import os
 import time
 
-import cv2
+
 import cv2 as cv
 import numpy as np
 
 from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtGui import QImage
-
 
 from src.models.tracking.deep_sort import DeepSort
 from src.utils.general import ROOT, add_image_id
@@ -18,7 +16,7 @@ from src.models.detection.yolov8_detector_onnx import YoloDetector
 
 
 class VideoDeepQthread(QThread):
-    showDeepFrame = pyqtSignal(list)
+    showDeepFrame = pyqtSignal(object)
 
     def filter_img(self, frame):
         kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (3, 3))
@@ -110,7 +108,7 @@ class VideoDeepQthread(QThread):
         # self.makedir(fileUrl)
         # cv2.imwrite(fileUrl, showFrame)
         # qImage=QImage(showFrame.data, showFrame.shape[1], showFrame.shape[0], QImage.Format_RGB888)
-        self.showDeepFrame.emit([showFrame])
+        self.showDeepFrame.emit(showFrame)
 
 
     def run(self):

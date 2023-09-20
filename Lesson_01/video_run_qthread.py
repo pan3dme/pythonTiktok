@@ -1,9 +1,9 @@
-import json
+
 import time
 
 import cv2
 from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtGui import QImage
+
 from datetime import datetime, timedelta
 from dele.fps_mc import FpsMc
 
@@ -11,7 +11,7 @@ from dele.fps_mc import FpsMc
 class VideoRunQThread(QThread):
     sendFrameInfo = pyqtSignal(list)
     send_info = pyqtSignal(str)
-    show_pic = pyqtSignal(list)
+    show_pic = pyqtSignal(object)
 
     def __init__(self):
         super(VideoRunQThread, self).__init__()
@@ -109,10 +109,10 @@ class VideoRunQThread(QThread):
 
                     show=baseFrame
 
-                    # self.fpsMc.showFps(show,tx=150,ty=25,scaleFont=0.7)
+                    self.fpsMc.showFps(show,tx=150,ty=25,scaleFont=0.7)
 
 
-                    self.show_pic.emit([show])
+                    self.show_pic.emit(show)
 
                 skipNum = time.time() - tm
                 skipNum = max(0, ( 1.0/self.fpsPlayNum10-skipNum))
