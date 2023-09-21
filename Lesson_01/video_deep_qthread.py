@@ -99,13 +99,14 @@ class VideoDeepQthread(QThread):
         (x, y, w, h) = self.waitFrameUrlArr[0][1]
         del self.waitFrameUrlArr[0]
 
-        saveName='cctv001'
+        saveName='cctv002'
         outMp4url = "out/" + saveName + ".mp4"
         if self.saveVideo:
             if self.writerVideoFile == None:
                 self.writerVideoFile = cv.VideoWriter(outMp4url, cv.VideoWriter_fourcc(*'mp4v'), 25.0,
                                                       (baseFrame.shape[0], baseFrame.shape[1]))
             self.writerVideoFile.write(baseFrame)
+            print( (baseFrame.shape[0], baseFrame.shape[1]))
 
 
 
