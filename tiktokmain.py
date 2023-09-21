@@ -16,6 +16,7 @@ from PyQt5.QtGui import QPixmap, QPainter, QLinearGradient, QColor, QImage
 from PyQt5.QtWidgets import QMainWindow, QTreeWidget, QWidget, QMenu, QLabel
 
 from Lesson_01.mainmousekey import MainWindowMouseKey
+from Lesson_01.read_record_video import ReadRecordVideo
 from Lesson_01.ui_mainwindow import Ui_MainWindow
 from Lesson_01.video_deep_qthread import VideoDeepQthread
 
@@ -31,13 +32,19 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.setupUi(self)
         self.runQthread=None
         self.deepQthread=None
+        self.readRecordVideo=None
 
         self.pushButton.clicked.connect(self.magic)
         self.reseTrackerBut.clicked.connect(self.reseTrackerButClik)
         self.toolButton.clicked.connect(self.selectFileClik)
         self.hikcambut.clicked.connect(self.hikcambutClik)
         self.hikcamhisitory.clicked.connect(self.hikcamhisitoryClik)
+        self.readVideoBut.clicked.connect(self.readVideoButClik)
         self.clearbut.clicked.connect(self.clearbutClik)
+        self.roiBut.clicked.connect(self.selectROIButClik)
+        self.checkBoxShowRoiRect.clicked.connect(self.checkBoxShowRoiRectClik)
+        self.checkBoxShowMaskFrame.clicked.connect(self.checkBoxShowMaskFrameClik)
+        self.checkBoxSaveVideo.clicked.connect(self.checkBoxSaveVideoClik)
 
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
@@ -46,17 +53,57 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.on_combobox_func(self.historycombox)
 
         self.initData()
-
-
         self.horizontalSlider.valueChanged.connect(self.valuechange)
 
+    def readVideoButClik(self):
+        vid_fm = (".txt")
+        file_list = " *".join(vid_fm)
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "choose an image or video file", "./out",
+                                                             f"Files({file_list})")
+        if file_name:
+            self.deepQthread.pause_process=True
+            self.runQthread.pause_process=True
+            self.readRecordVideo=ReadRecordVideo()
+            self.readRecordVideo.setFileUrl(file_name)
+            self.readRecordVideo.showRecordpic.connect(self.showDeepFrame)
+            self.readRecordVideo.start()
+
+
+
+
+            pass
+        pass
+    def checkBoxSaveVideoClik(self):
+        self.deepQthread.saveVideo=self.checkBoxSaveVideo.isChecked()
+        pass
+    def checkBoxShowMaskFrameClik(self):
+        self.runQthread.showMaskFrame = self.checkBoxShowMaskFrame.isChecked()
+
+    def checkBoxShowRoiRectClik(self):
+        # print('select', self.checkBoxShowRoiRect.isChecked())
+        self.runQthread.showRoiRectLine=self.checkBoxShowRoiRect.isChecked()
+
+        pass
+    def selectROIButClik(self):
+
+        cframe = cv2.resize(self.runQthread.selectROIFrame, (500, 300))
+        (x,y,w,h) = cv2.selectROI('cframe', cframe, False, False)
+
+
+
+        print((x/500,y/300,w/500,h/300))
+        self.runQthread.setRoiRect((x/500,y/300,(x+w)/500,(y+h)/300))
+        self.checkBoxShowRoiRect.setChecked(True)
+        self.runQthread.showRoiRectLine = True
+
+
+
+        pass
     def valuechange(self):
         print("current slider value=%s" % self.horizontalSlider.value())
         size = self.horizontalSlider.value()
         self.runQthread.fpsPlayNum10=size
         print(size)
-
-
 
     def on_combobox_func(self, combobox):
         print('select',combobox.currentIndex())
@@ -83,10 +130,9 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def clearbutClik(self):
         print('clearbutClik')
-        self.deepQthread.resetYoloDetector()
-        self.runQthread.setVideoPath(None)
-        time.sleep(1)
-        print('重新开始')
+        self.runQthread.pause_process = True
+        self.deepQthread.pause_process = True
+
     def hikcamhisitoryClik(self):
         time_str = self.timeEdit.time().toString('hh:mm:ss')
         date_str = self.dateEdit.date().toString('yyyy-MM-dd')
@@ -102,19 +148,16 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         url = "rtsp://admin:Hik123456@192.168.31.212/Streaming/Channels/2"
         self.pushSelectFile(url)
         pass
-
-
+    def send_video_info(self, value):
+        self.videoinfolabel.setText(value)
+        pass
     def show_frame_pic(self, value):
-
         qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_RGB888)
         self.capframe.setPixmap(QPixmap.fromImage(qImage))
 
     def showDeepFrame(self, value):
-
         qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_RGB888)
         self.deepframe.setPixmap(QPixmap.fromImage(qImage))
-
-
 
     def send_frame(self,value):
         # self.label.setText(value)
@@ -122,7 +165,6 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def initData(self):
         self.deepQthread = VideoDeepQthread()
-
         model_name = 'D:\\ultralytics-main\\runs\detect\\train15\weights\\best.onnx'
         self.deepQthread.set_start_config(
             model_name=model_name,
@@ -134,6 +176,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread = VideoRunQThread()
         self.runQthread.send_info.connect(self.send_frame)
         self.runQthread.show_pic.connect(self.show_frame_pic)
+        self.runQthread.send_video_info.connect(self.send_video_info)
         self.runQthread.sendFrameInfo.connect(self.deepQthread.sendFrameInfo)
         self.runQthread.start()
 
@@ -142,18 +185,13 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.deepQthread.resetYoloDetector()
         self.runQthread.setVideoPath(value)
 
-
-
     def selectFileClik(self):
-
         vid_fm = ( ".avi", ".mp4" )
         file_list = " *".join( vid_fm)
         file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "choose an image or video file", "./data",
                                                              f"Files({file_list})")
         if file_name:
-            # self.pushSelectFile('D:/pythonscore/UIyolov8/Lesson_01/doorsheep.mp4')
             self.pushSelectFile(file_name)
-
             pass
 
     def reseTrackerButClik(self):
@@ -164,14 +202,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
         self.runQthread.pause_process=not self.runQthread.pause_process
         self.deepQthread.pause_process=self.runQthread.pause_process
-        cframe=cv2.resize(self.runQthread.selectROIFrame, (500,300))
-        rect = cv2.selectROI(cframe, showCrosshair=True)
 
-        print(rect)
         pass
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()
+    window.pushSelectFile('D:/pythontiktok/data/hikCam_001.mp4')
     sys.exit(app.exec())

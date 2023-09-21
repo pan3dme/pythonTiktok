@@ -26,10 +26,10 @@ class VideoDeepQthread(QThread):
 
         return dilated
 
-    def fillet_arr(self, arr):
+    def fillet_arr(self, arr,rect):
         for temp in arr:
             temp["bbox"] = temp["bbox"].tolist()
-            (x, y, w, h) = self.curCapRoiRect
+            (x, y, w, h) = rect
             temp["rect"] = [x, y, w, h]
         return str(json.dumps(arr))
 
@@ -50,6 +50,9 @@ class VideoDeepQthread(QThread):
         self.model_name = "yolov8n.PT"
         self.waitFrameUrlArr = []
         self.tracker=None
+        self.saveVideo=False
+        self.writerVideoFile=None
+        self.frameId = 0
 
 
 
@@ -70,6 +73,7 @@ class VideoDeepQthread(QThread):
         self._init_tracker()
 
 
+
     def resetYoloDetector(self):
         self.waitFrameUrlArr.clear()
         print('resetYoloDetector')
@@ -87,28 +91,49 @@ class VideoDeepQthread(QThread):
         self.tracker = DeepSort(
             model_path=os.path.join(ROOT, f"src/models/tracking/deep_sort/deep/checkpoint/ckpt.t7"))
 
-    skipnum=0
+
+
     def runTemp(self, frame_id):
 
         baseFrame = self.waitFrameUrlArr[0][0]
-        frame = self.waitFrameUrlArr[0][1]
+        (x, y, w, h) = self.waitFrameUrlArr[0][1]
         del self.waitFrameUrlArr[0]
 
+        saveName='cctv001'
+        outMp4url = "out/" + saveName + ".mp4"
+        if self.saveVideo:
+            if self.writerVideoFile == None:
+                self.writerVideoFile = cv.VideoWriter(outMp4url, cv.VideoWriter_fourcc(*'mp4v'), 25.0,
+                                                      (baseFrame.shape[0], baseFrame.shape[1]))
+            self.writerVideoFile.write(baseFrame)
 
-        model_output = self.detector.inference(frame, self.confi_thr, self.iou_thr)
+
+
+        cutFrame = baseFrame[int(y * baseFrame.shape[0]): int(h * baseFrame.shape[0]),
+                   int(x * baseFrame.shape[1]):int(w * baseFrame.shape[1])]
+
+
+
+
+        model_output = self.detector.inference(cutFrame, self.confi_thr, self.iou_thr)
         model_output = self.tracker.update(
             detection_results=model_output,
-            ori_img=frame)
+            ori_img=cutFrame)
         model_output = add_image_id(model_output, frame_id)
+        self.draw_results(cutFrame, model_output)
 
-        showFrame = self.draw_results(frame, model_output)
+        self.showDeepFrame.emit(cv.resize(baseFrame, (500, 350)))
 
-        # fileUrl = 'out/kkk/' + str(self.skipnum) + '.jpg'
-        # self.skipnum+=1
-        # self.makedir(fileUrl)
-        # cv2.imwrite(fileUrl, showFrame)
-        # qImage=QImage(showFrame.data, showFrame.shape[1], showFrame.shape[0], QImage.Format_RGB888)
-        self.showDeepFrame.emit(showFrame)
+
+        if self.saveVideo:
+
+            addTextStr = str(self.frameId) + "||" + self.fillet_arr(model_output,(x, y, w, h)) + "\n"
+            strUrl = "out/" + saveName + ".txt"
+            with open(strUrl, 'a') as f:
+                f.write(addTextStr)
+            self.frameId+=1
+
+
 
 
     def run(self):
@@ -120,7 +145,7 @@ class VideoDeepQthread(QThread):
             else:
                 if len(self.waitFrameUrlArr):
                     self.runTemp(frame_id)
-                    print('wait', len(self.waitFrameUrlArr))
+                    # print('wait', len(self.waitFrameUrlArr))
                     frame_id += 1
                     time.sleep(0.3)
                 else:

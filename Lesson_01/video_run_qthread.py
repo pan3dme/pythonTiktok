@@ -12,18 +12,28 @@ class VideoRunQThread(QThread):
     sendFrameInfo = pyqtSignal(list)
     send_info = pyqtSignal(str)
     show_pic = pyqtSignal(object)
+    send_video_info = pyqtSignal(str)
 
     def __init__(self):
         super(VideoRunQThread, self).__init__()
         self.pause_process=False
         self.selectROIFrame=None
+        self.showMaskFrame=False
+        self.roiRect=None
         self.cap=None
+        self.frame_height=0
+        self.frame_width  =0
         self.CacheWaitArr=[]
         self.CacheNum10=10
         self.fpsPlayNum10 = 10.0
         self.fpsMc = FpsMc()
+        self.showRoiRectLine=False
         self.object_detector = cv2.createBackgroundSubtractorMOG2(history=500, varThreshold=40, detectShadows=True)
 
+    def setRoiRect(self,value):
+        self.roiRect=value
+
+        pass
     def filter_img(self, frame):
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
         _, thresh = cv2.threshold(frame, 20, 255, cv2.THRESH_BINARY)
@@ -33,11 +43,13 @@ class VideoRunQThread(QThread):
         return dilated
     def setVideoPath(self, url):
         self.pause_process=True
-        if url is None:
+        self.cap = cv2.VideoCapture(url)
+        if self.cap.isOpened():
+            self.frame_width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+            self.frame_height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            self.send_video_info.emit('w:'+str(self.frame_width)+'h:'+str(self.frame_height))
             pass
-        else:
-            self.cap = cv2.VideoCapture(url)
-            self.pause_process = False
+        self.pause_process = False
 
     def makeHikHostoryByTm(self,tm):
         # tm = datetime(2023, 9, 16, 18, 24, 40)
@@ -61,7 +73,7 @@ class VideoRunQThread(QThread):
         print(url)
         cap = cv2.VideoCapture(url)
         return cap
-    def mathToDeep(self,frame,mask):
+    def mathToDeep(self,baseFrame,rectFrame,mask,roiRect):
         contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         detections = []
         for contour in contours:
@@ -70,7 +82,7 @@ class VideoRunQThread(QThread):
             (x, y, w, h) = cv2.boundingRect(contour)
             detections.append([x, y, w, h])
 
-        self.CacheWaitArr.append([frame, frame])
+        self.CacheWaitArr.append([baseFrame,roiRect])
         if len(detections) > 0:
             # 检测到场景动态将缓存帧推到进程中 从排前面的开始
             if len(self.CacheWaitArr) > 1:
@@ -98,27 +110,35 @@ class VideoRunQThread(QThread):
                 # print(self.cap.get(cv2.CAP_PROP_POS_FRAMES),self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 ret, capframe = self.cap.read()
                 if ret:
-                    self.selectROIFrame=capframe
-                    baseFrame = cv2.resize(capframe, (500,350))
-                    rectFrame = cv2.resize(capframe, (500,350))
+                    # 初始限制视频的尺寸
+                    baseFrame = cv2.resize(capframe, (1000, 700))
+                    self.selectROIFrame=baseFrame
 
-                    applymask = self.object_detector.apply(baseFrame)
-                    mask = self.filter_img(applymask)
-
-                    self.mathToDeep(rectFrame,mask)
-
-                    show=baseFrame
-
-                    self.fpsMc.showFps(show,tx=150,ty=25,scaleFont=0.7)
+                    if self.roiRect != None:
+                        (x, y, w, h) = self.roiRect
+                        rectFrame = baseFrame[int(y * baseFrame.shape[0]): int(h * baseFrame.shape[0]), int(x * baseFrame.shape[1]):int(w * baseFrame.shape[1])]
 
 
-                    self.show_pic.emit(show)
+                    mask = self.object_detector.apply(baseFrame)
+                    mask = self.filter_img(mask)
+                    if self.roiRect != None:
+                        self.mathToDeep(baseFrame,rectFrame, mask,self.roiRect)
+                        pass
 
-                skipNum = time.time() - tm
-                skipNum = max(0, ( 1.0/self.fpsPlayNum10-skipNum))
+                    showFrame=baseFrame
+                    self.fpsMc.showFps(showFrame,tx=150,ty=25,scaleFont=0.7)
+                    if self.roiRect !=  None and self.showRoiRectLine:
+                        (x,y,w,h)=self.roiRect
+                        cv2.rectangle(showFrame, (int(x * showFrame.shape[1]), int(y *showFrame.shape[0])), (int(w * showFrame.shape[1]), int(h *showFrame.shape[0])), (255, 0, 0), 1)
+                    if self.showMaskFrame:
+                        mask=cv2.resize(mask, (500, 350))
+                        self.show_pic.emit(cv2.merge((mask, mask, mask)))
+                    else:
+                        self.show_pic.emit(cv2.resize(showFrame, (500, 350)))
 
-                time.sleep(skipNum)
-
+                waitTm = time.time() - tm
+                waitTm = max(0, ( 1.0/self.fpsPlayNum10-waitTm))
+                time.sleep(waitTm)
 
             else:
                 time.sleep(1)
