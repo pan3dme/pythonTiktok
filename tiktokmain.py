@@ -55,11 +55,13 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
 
-        # self.historycombox.currentIndexChanged.connect(lambda: self.on_combobox_func(self.historycombox))
-        # self.on_combobox_func(self.historycombox)
+        self.historycombox.currentIndexChanged.connect(self.on_combobox_func)
+        self.on_combobox_func()
+        self.horizontalSlider.valueChanged.connect(self.valuechange)
+
 
         self.initData()
-        self.horizontalSlider.valueChanged.connect(self.valuechange)
+
 
     def readVideoButClik(self):
         vid_fm = (".txt")
@@ -71,10 +73,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             self.runQthread.pause_process=True
             self.readRecordVideo=ReadRecordVideo()
             self.readRecordVideo.setFileUrl(file_name)
-            self.readRecordVideo.showRecordpic.connect(self.showDeepFrame)
+            self.readRecordVideo.showRecordpic.connect(self.show_frame_pic)
             self.readRecordVideo.start()
-
-
 
 
             pass
@@ -111,7 +111,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread.fpsPlayNum10=size
         print(size)
 
-    def on_combobox_func(self, combobox):
+    def on_combobox_func(self):
+        combobox=self.historycombox
         print('select',combobox.currentIndex())
         qt= QTime(QTime.currentTime().hour() , 0)
         match combobox.currentIndex():

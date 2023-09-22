@@ -77,7 +77,4 @@ class ReadRecordVideo(QThread):
                         self.showRecordpic.emit(cv2.resize(baseframe, (500, 350)))
                         print('recorde run')
 
-
-
-
-                time.sleep(1)
+                time.sleep(1/25)
