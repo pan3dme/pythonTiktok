@@ -1,7 +1,0 @@
-path: D:\pythonscore\YOLOv8-DeepSort-PyQt-GUI-main\out\s_dele\screenshot
-train: train/images
-val: valid/images
-test: test/images
-nc: 1
-names:
-- sheep

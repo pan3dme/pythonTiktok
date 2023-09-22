@@ -1,57 +1,34 @@
+import time
 
 import cv2
-from PyQt5.QtCore import QObject
+import numpy as np
+from ffpyplayer.player import MediaPlayer
 
+video_path = "rtmp://192.168.31.36:1935/live/test"
 
-class CamWriteVideo(QObject):
-    def __init__(self,onnName):
-        super().__init__()
+def PlayVideo(video_path):
+    video=cv2.VideoCapture(video_path)
+    player = MediaPlayer(video_path)
+    while True:
+        tm= time.time()
+        grabbed, frame = video.read()
+        tt=video.get(cv2.CAP_PROP_POS_FRAMES)
+        mm=video.get()
+        print(tt,mm)
+        audio_frame, val = player.get_frame()
+        if not grabbed:
+            print("End of video")
+            break
 
-    def makeHikCam(self):
-        videoBaseUrl = "D:/pythonscore/YOLOv8-DeepSort-PyQt-GUI-main/data/hikCam_001.MP4"
-        return  cv2.VideoCapture(videoBaseUrl)
+        cv2.imshow("Video", frame)
+        print(time.time()-tm)
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+        if val != 'eof' and audio_frame is not None:
+            # audio
+            img, t = audio_frame
+            # print(img, t)
+    video.release()
+    cv2.destroyAllWindows()
 
-
-    def backMsg(self , msg):
-        print('backmsg')
-        print(msg)
-
-    def makeGoproCam(self):
-        videoBaseUrl ="rtmp://192.168.31.36:1935/live/test"
-        return cv2.VideoCapture(videoBaseUrl)
-
-    testGoproCamT=0
-    def run(self):
-
-
-        cap = self.makeGoproCam()
-
-
-        sendTm=0
-        if cap.isOpened():
-            while cap.isOpened():
-                ret, capframe = cap.read()
-                if ret:
-                    cv2.imshow('abc',capframe)
-
-
-
-                keyCode = cv2.waitKey(10)
-                if keyCode == ord("q"):
-                    break
-
-
-        else:
-            print('摄像头出错')
-
-
-
-if __name__ == '__main__':
-    mainWindow = CamWriteVideo('abc')
-
-
-    mainWindow.run()
-
-
-
-
+PlayVideo(video_path)

@@ -3,7 +3,6 @@ import math
 import os
 import time
 
-
 import cv2 as cv
 import numpy as np
 
@@ -14,9 +13,9 @@ from src.utils.general import ROOT, add_image_id
 from src.models.detection.yolov8_detector_onnx import YoloDetector
 
 
-
 class VideoDeepQthread(QThread):
     showDeepFrame = pyqtSignal(object)
+    saveRecordVideoByFrame = pyqtSignal(object)
 
     def filter_img(self, frame):
         kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (3, 3))
@@ -26,7 +25,7 @@ class VideoDeepQthread(QThread):
 
         return dilated
 
-    def fillet_arr(self, arr,rect):
+    def fillet_arr(self, arr, rect):
         for temp in arr:
             temp["bbox"] = temp["bbox"].tolist()
             (x, y, w, h) = rect
@@ -44,17 +43,15 @@ class VideoDeepQthread(QThread):
     def __init__(self):
         super(VideoDeepQthread, self).__init__()
         self.threadFlag = True
-        self.pause_process=False
-        self.confi_thr =3.0
+        self.pause_process = False
+        self.confi_thr = 3.0
         self.iou_thr = 3.5
         self.model_name = "yolov8n.PT"
         self.waitFrameUrlArr = []
-        self.tracker=None
-        self.saveVideo=False
-        self.writerVideoFile=None
+        self.tracker = None
+        self.saveVideo = False
+        self.writerVideoFile = None
         self.frameId = 0
-
-
 
     def sendFrameInfo(self, arr):
         # 限制一下预备等候分析的
@@ -63,7 +60,6 @@ class VideoDeepQthread(QThread):
             del self.waitFrameUrlArr[0]
         self.waitFrameUrlArr.append(arr)
 
-
     def set_start_config(self, model_name="yolov8n", confidence_threshold=0.35, iou_threshold=0.45):
         self.threadFlag = True
         self.confi_thr = confidence_threshold
@@ -71,8 +67,6 @@ class VideoDeepQthread(QThread):
         self.model_name = model_name
         self._init_yolo()
         self._init_tracker()
-
-
 
     def resetYoloDetector(self):
         self.waitFrameUrlArr.clear()
@@ -87,71 +81,59 @@ class VideoDeepQthread(QThread):
             iou_threshold=self.iou_thr)
 
     def _init_tracker(self):
- 
+
         self.tracker = DeepSort(
             model_path=os.path.join(ROOT, f"src/models/tracking/deep_sort/deep/checkpoint/ckpt.t7"))
 
-
-
-    def runTemp(self, frame_id):
+    def runTemp(self, value):
 
         baseFrame = self.waitFrameUrlArr[0][0]
         (x, y, w, h) = self.waitFrameUrlArr[0][1]
         del self.waitFrameUrlArr[0]
 
-        saveName='cctv002'
-        outMp4url = "out/" + saveName + ".mp4"
-        if self.saveVideo:
-            if self.writerVideoFile == None:
-                self.writerVideoFile = cv.VideoWriter(outMp4url, cv.VideoWriter_fourcc(*'mp4v'), 25.0,
-                                                      (baseFrame.shape[0], baseFrame.shape[1]))
-            self.writerVideoFile.write(baseFrame)
-            print( (baseFrame.shape[0], baseFrame.shape[1]))
+
+
 
 
 
         cutFrame = baseFrame[int(y * baseFrame.shape[0]): int(h * baseFrame.shape[0]),
                    int(x * baseFrame.shape[1]):int(w * baseFrame.shape[1])]
 
-
-
-
         model_output = self.detector.inference(cutFrame, self.confi_thr, self.iou_thr)
         model_output = self.tracker.update(
             detection_results=model_output,
             ori_img=cutFrame)
-        model_output = add_image_id(model_output, frame_id)
+        model_output = add_image_id(model_output, self.frameId)
         self.draw_results(cutFrame, model_output)
-
         self.showDeepFrame.emit(cv.resize(baseFrame, (500, 350)))
 
 
+        # if self.saveVideo:
+        #     self.saveRecordVideoByFrame.emit(baseFrame)
+        #     time.sleep(1)
+
         if self.saveVideo:
-
-            addTextStr = str(self.frameId) + "||" + self.fillet_arr(model_output,(x, y, w, h)) + "\n"
-            strUrl = "out/" + saveName + ".txt"
-            with open(strUrl, 'a') as f:
-                f.write(addTextStr)
-            self.frameId+=1
-
-
-
+            # addTextStr = str(self.frameId) + "||" + self.fillet_arr(model_output, (x, y, w, h)) + "\n"
+            # strUrl = "out/" + saveName + ".txt"
+            # with open(strUrl, 'a') as f:
+            #     f.write(addTextStr)
+            pass
+        self.frameId += 1
 
     def run(self):
-        frame_id = 1
+
         time.sleep(1.0)
         while self.threadFlag:
             if self.pause_process:
                 time.sleep(1.0)
             else:
                 if len(self.waitFrameUrlArr):
-                    self.runTemp(frame_id)
+                    self.runTemp(0)
                     # print('wait', len(self.waitFrameUrlArr))
-                    frame_id += 1
+
                     time.sleep(0.3)
                 else:
                     time.sleep(1.0)
-
 
     rng = np.random.default_rng(3)
     PALLETE = rng.uniform(0, 255, size=(81, 3))
@@ -159,9 +141,10 @@ class VideoDeepQthread(QThread):
                 [5, 11], [6, 12], [5, 6], [5, 7], [6, 8], [7, 9],
                 [8, 10], [1, 2], [0, 1], [0, 2], [1, 3], [2, 4],
                 [3, 5], [4, 6]]
-    def draw_results(self,image, model_results):
+
+    def draw_results(self, image, model_results):
         img_cpy = image
-        if model_results == []:
+        if not model_results:
             return img_cpy
         height, width, _ = img_cpy.shape
         for obj in model_results:

@@ -11,6 +11,7 @@ import time
 from datetime import datetime
 
 import cv2
+import numpy as np
 from PyQt5.QtCore import QEvent, Qt, QTimer, pyqtSignal, QPoint, QRect, QDate, QTime
 from PyQt5.QtGui import QPixmap, QPainter, QLinearGradient, QColor, QImage
 from PyQt5.QtWidgets import QMainWindow, QTreeWidget, QWidget, QMenu, QLabel
@@ -33,6 +34,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread=None
         self.deepQthread=None
         self.readRecordVideo=None
+
+        self.writerVideoFile = cv2.VideoWriter("out/ccav006.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 10.0,
+                                               (500, 500))
+
+
+
 
         self.pushButton.clicked.connect(self.magic)
         self.reseTrackerBut.clicked.connect(self.reseTrackerButClik)
@@ -156,8 +163,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.capframe.setPixmap(QPixmap.fromImage(qImage))
 
     def showDeepFrame(self, value):
+        self.saveRecordVideoByFrame(value)
         qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_RGB888)
         self.deepframe.setPixmap(QPixmap.fromImage(qImage))
+
+
+
 
     def send_frame(self,value):
         # self.label.setText(value)
@@ -171,14 +182,26 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             confidence_threshold=0.1,
             iou_threshold=0.15)
         self.deepQthread.showDeepFrame.connect(self.showDeepFrame)
+        self.deepQthread.saveRecordVideoByFrame.connect(self.saveRecordVideoByFrame)
         self.deepQthread.start()
 
         self.runQthread = VideoRunQThread()
         self.runQthread.send_info.connect(self.send_frame)
         self.runQthread.show_pic.connect(self.show_frame_pic)
+
         self.runQthread.send_video_info.connect(self.send_video_info)
         self.runQthread.sendFrameInfo.connect(self.deepQthread.sendFrameInfo)
+
         self.runQthread.start()
+
+
+
+    def saveRecordVideoByFrame(self,vframe):
+        print('saveRecordVideoByFrame')
+        vframe = np.zeros((500, 500, 3), np.uint8)
+        self.writerVideoFile.write(np.zeros((500, 500, 3), np.uint8))
+        cv2.imwrite( 'out/ccav.jpg', vframe)
+        print('写拉文件')
 
 
     def pushSelectFile(self,value):

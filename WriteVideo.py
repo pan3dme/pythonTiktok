@@ -190,7 +190,7 @@ if __name__ == '__main__':
     onnxName = 'D:\\ultralytics-main\\runs\detect\\train20\weights\\best.onnx'
     # onnxName='D:\pythonscore\YOLOv8-DeepSort-PyQt-GUI-main\weights\detection\yolov8n.onnx'
     mainWindow = CamWriteVideo(onnxName)
-    _selectTyp=4
+    _selectTyp=1
     match _selectTyp:
         case 1:
             mainWindow.runLocaVdeo("s_dele")
