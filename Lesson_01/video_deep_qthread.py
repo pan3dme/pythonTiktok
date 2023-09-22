@@ -51,7 +51,7 @@ class VideoDeepQthread(QThread):
         self.tracker = None
         self.saveVideo = False
         self.writerVideoFile = None
-        self.frameId = 0
+
 
     def sendFrameInfo(self, arr):
         # 限制一下预备等候分析的
@@ -85,14 +85,15 @@ class VideoDeepQthread(QThread):
         self.tracker = DeepSort(
             model_path=os.path.join(ROOT, f"src/models/tracking/deep_sort/deep/checkpoint/ckpt.t7"))
 
-    def runTemp(self, value):
+    def runTemp(self, idx):
 
         baseFrame = self.waitFrameUrlArr[0][0]
         (x, y, w, h) = self.waitFrameUrlArr[0][1]
         del self.waitFrameUrlArr[0]
 
-
-
+        if self.saveVideo:
+            # self.saveRecordVideoByFrame.emit(cv.resize(baseFrame, (500, 350)))
+            self.saveRecordVideoByFrame.emit(baseFrame)
 
 
 
@@ -103,34 +104,30 @@ class VideoDeepQthread(QThread):
         model_output = self.tracker.update(
             detection_results=model_output,
             ori_img=cutFrame)
-        model_output = add_image_id(model_output, self.frameId)
+        model_output = add_image_id(model_output, idx)
         self.draw_results(cutFrame, model_output)
         self.showDeepFrame.emit(cv.resize(baseFrame, (500, 350)))
 
-
-        # if self.saveVideo:
-        #     self.saveRecordVideoByFrame.emit(baseFrame)
-        #     time.sleep(1)
-
         if self.saveVideo:
-            # addTextStr = str(self.frameId) + "||" + self.fillet_arr(model_output, (x, y, w, h)) + "\n"
-            # strUrl = "out/" + saveName + ".txt"
-            # with open(strUrl, 'a') as f:
-            #     f.write(addTextStr)
-            pass
-        self.frameId += 1
+            addTextStr = str(idx) + "||" + self.fillet_arr(model_output, (x, y, w, h)) + "\n"
+            strUrl = "out/tiktok.txt"
+            with open(strUrl, 'a') as f:
+                f.write(addTextStr)
+
+
 
     def run(self):
 
         time.sleep(1.0)
+        frame_idx=0
         while self.threadFlag:
             if self.pause_process:
                 time.sleep(1.0)
             else:
                 if len(self.waitFrameUrlArr):
-                    self.runTemp(0)
+                    self.runTemp(frame_idx)
                     # print('wait', len(self.waitFrameUrlArr))
-
+                    frame_idx+=1
                     time.sleep(0.3)
                 else:
                     time.sleep(1.0)

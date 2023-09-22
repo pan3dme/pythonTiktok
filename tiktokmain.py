@@ -35,8 +35,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.deepQthread=None
         self.readRecordVideo=None
 
-        self.writerVideoFile = cv2.VideoWriter("out/ccav006.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 10.0,
-                                               (500, 500))
+        self.writerVideoFile =None
 
 
 
@@ -56,8 +55,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
 
-        self.historycombox.currentIndexChanged.connect(lambda: self.on_combobox_func(self.historycombox))
-        self.on_combobox_func(self.historycombox)
+        # self.historycombox.currentIndexChanged.connect(lambda: self.on_combobox_func(self.historycombox))
+        # self.on_combobox_func(self.historycombox)
 
         self.initData()
         self.horizontalSlider.valueChanged.connect(self.valuechange)
@@ -163,7 +162,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.capframe.setPixmap(QPixmap.fromImage(qImage))
 
     def showDeepFrame(self, value):
-        self.saveRecordVideoByFrame(value)
+        # self.saveRecordVideoByFrame(value)
         qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_RGB888)
         self.deepframe.setPixmap(QPixmap.fromImage(qImage))
 
@@ -197,11 +196,16 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
     def saveRecordVideoByFrame(self,vframe):
-        print('saveRecordVideoByFrame')
-        vframe = np.zeros((500, 500, 3), np.uint8)
-        self.writerVideoFile.write(np.zeros((500, 500, 3), np.uint8))
-        cv2.imwrite( 'out/ccav.jpg', vframe)
-        print('写拉文件')
+        # print('saveRecordVideoByFrame')
+
+        if self.writerVideoFile is None:
+            print('创建文件,out/tiktok.mp4')
+            self.writerVideoFile = cv2.VideoWriter("out/tiktok.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 10.0,
+                                                   (vframe.shape[1], vframe.shape[0]))
+
+        self.writerVideoFile.write(vframe)
+
+        print('写入文件')
 
 
     def pushSelectFile(self,value):
