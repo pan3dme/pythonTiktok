@@ -51,6 +51,7 @@ class VideoDeepQthread(QThread):
         self.tracker = None
         self.saveVideo = False
         self.writerVideoFile = None
+        self.frameRecordIdx=0
 
 
     def sendFrameInfo(self, arr):
@@ -105,14 +106,20 @@ class VideoDeepQthread(QThread):
             detection_results=model_output,
             ori_img=cutFrame)
         model_output = add_image_id(model_output, idx)
-        self.draw_results(cutFrame, model_output)
-        self.showDeepFrame.emit(cv.resize(baseFrame, (500, 350)))
+
 
         if self.saveVideo:
-            addTextStr = str(idx) + "||" + self.fillet_arr(model_output, (x, y, w, h)) + "\n"
+            (th,tw,tn)=baseFrame.shape
+            addTextStr = str(self.frameRecordIdx) + "||" + self.fillet_arr(model_output, (int(x*tw), int(y*th),int( w*tw),int( h*th))) + "\n"
+            self.frameRecordIdx+=1
             strUrl = "out/tiktok.txt"
             with open(strUrl, 'a') as f:
                 f.write(addTextStr)
+
+        self.draw_results(cutFrame, model_output)
+        self.showDeepFrame.emit(cv.resize(baseFrame, (500, 350)))
+
+
 
 
 

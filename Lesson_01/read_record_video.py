@@ -2,6 +2,7 @@ import json
 import time
 
 import cv2
+import numpy as np
 from PyQt5.QtCore import QThread, pyqtSignal
 
 
@@ -61,6 +62,59 @@ class ReadRecordVideo(QThread):
         self.frame_width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.allFrameRidByDic = self.getAllFrameRidByDic(self.outkeyDic)
         self.pause_process=False
+
+    rng = np.random.default_rng(3)
+    PALLETE = rng.uniform(0, 255, size=(81, 3))
+
+    SKELETON = [[15, 13], [13, 11], [16, 14], [14, 12], [11, 12],
+                [5, 11], [6, 12], [5, 6], [5, 7], [6, 8], [7, 9],
+                [8, 10], [1, 2], [0, 1], [0, 2], [1, 3], [2, 4],
+                [3, 5], [4, 6]]
+
+    def draw_results(self, image, model_results):
+        img_cpy =image
+        if model_results == []:
+            return img_cpy
+        height, width, _ = img_cpy.shape
+
+        for obj in model_results:
+            x0 = round(obj["bbox"][0])
+            y0 = round(obj["bbox"][1])
+            x1 = round(obj["bbox"][2])
+            y1 = round(obj["bbox"][3])
+
+            if obj["rect"] is not None:
+                x0 += obj["rect"][0]
+                y0 += obj["rect"][1]
+                x1 += obj["rect"][0]
+                y1 += obj["rect"][1]
+
+            x0=int(x0)
+            y0=int(y0)
+            x1=int(x1)
+            y1=int(y1)
+
+            id = int(obj["id"])
+            class_name = obj["class"]
+            confi = float(obj["confidence"])
+            color = self.PALLETE[id % self.PALLETE.shape[0]]
+            if obj["keypoints"] != []:
+                img_cpy = self.draw_keypoints(img_cpy, obj["keypoints"], color)
+
+            text = '%d-%s-%s' % (id, class_name, str(round(confi, 3)))
+            txt_color_light = (255, 255, 255)
+            txt_color_dark = (0, 0, 0)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 1
+            thickness = 2
+            txt_size = cv2.getTextSize(text, font, 0.4, 1)[0]
+            cv2.rectangle(img_cpy, (x0, y0), (x1, y1), color, int(thickness * 1 * font_scale))
+            y0 = y0 - 30
+
+            cv2.putText(img_cpy, text, (x0, y0 + txt_size[1]), font, font_scale, txt_color_dark,
+                        thickness=thickness + 1)
+            cv2.putText(img_cpy, text, (x0, y0 + txt_size[1]), font, font_scale, txt_color_light, thickness=thickness)
+        return img_cpy
     def run(self):
         time.sleep(1)
         while True:
@@ -74,7 +128,14 @@ class ReadRecordVideo(QThread):
                 if  cap.isOpened():
                     ret, baseframe = cap.read()
                     if ret:
+
+                        video_pos = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
+                        if str(video_pos) in self.outkeyDic:
+                            _labelmeXml = self.outkeyDic[str(video_pos)]
+                            frame = self.draw_results(baseframe, _labelmeXml)
+
+
                         self.showRecordpic.emit(cv2.resize(baseframe, (500, 350)))
                         print('recorde run')
 
-                time.sleep(1/25)
+                time.sleep(1/10)
