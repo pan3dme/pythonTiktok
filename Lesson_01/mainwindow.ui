@@ -333,6 +333,32 @@
      <string>读取记录</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="deepStopCheck">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>390</y>
+      <width>121</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>检测暂停</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="capStopCheck">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>360</y>
+      <width>121</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>视频暂停</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

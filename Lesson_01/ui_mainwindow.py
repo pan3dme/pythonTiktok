@@ -13,7 +13,6 @@ from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
 from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget, QRadioButton, QCheckBox, QComboBox, QTimeEdit, \
     QDateEdit, QSlider
 
-
 # pyside6-uic mainwindow.ui > ui_mainwindow.py
 
 
@@ -101,6 +100,12 @@ class Ui_MainWindow(object):
         self.readVideoBut = QToolButton(self.centralwidget)
         self.readVideoBut.setObjectName(u"readVideoBut")
         self.readVideoBut.setGeometry(QRect(650, 30, 81, 31))
+        self.deepStopCheck = QCheckBox(self.centralwidget)
+        self.deepStopCheck.setObjectName(u"deepStopCheck")
+        self.deepStopCheck.setGeometry(QRect(720, 390, 121, 19))
+        self.capStopCheck = QCheckBox(self.centralwidget)
+        self.capStopCheck.setObjectName(u"capStopCheck")
+        self.capStopCheck.setGeometry(QRect(720, 360, 121, 19))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -136,5 +141,7 @@ class Ui_MainWindow(object):
         self.checkBoxShowMaskFrame.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u68c0\u6d4bmask", None))
         self.checkBoxSaveVideo.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58\u8bc6\u522b\u89c6\u9891", None))
         self.readVideoBut.setText(QCoreApplication.translate("MainWindow", u"\u8bfb\u53d6\u8bb0\u5f55", None))
+        self.deepStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6682\u505c", None))
+        self.capStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u89c6\u9891\u6682\u505c", None))
     # retranslateUi
 

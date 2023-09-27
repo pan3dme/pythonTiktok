@@ -34,7 +34,6 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread=None
         self.deepQthread=None
         self.readRecordVideo=None
-
         self.writerVideoFile =None
 
 
@@ -51,6 +50,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.checkBoxShowRoiRect.clicked.connect(self.checkBoxShowRoiRectClik)
         self.checkBoxShowMaskFrame.clicked.connect(self.checkBoxShowMaskFrameClik)
         self.checkBoxSaveVideo.clicked.connect(self.checkBoxSaveVideoClik)
+        self.capStopCheck.clicked.connect(self.capStopCheckClik)
+        self.deepStopCheck.clicked.connect(self.deepStopCheckClik)
 
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
@@ -89,6 +90,15 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
             pass
+        pass
+    def deepStopCheckClik(self):
+        self.deepQthread.pause_process=self.deepStopCheck.isChecked()
+        print(self.deepStopCheck.isChecked())
+        pass
+    def capStopCheckClik(self):
+
+        self.runQthread.pause_process = self.capStopCheck.isChecked()
+        print(self.capStopCheck.isChecked(),self.runQthread.pause_process )
         pass
     def checkBoxSaveVideoClik(self):
         self.deepQthread.saveVideo=self.checkBoxSaveVideo.isChecked()
