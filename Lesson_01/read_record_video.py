@@ -89,10 +89,7 @@ class ReadRecordVideo(QThread):
                 x1 += obj["rect"][0]
                 y1 += obj["rect"][1]
 
-            x0=int(x0)
-            y0=int(y0)
-            x1=int(x1)
-            y1=int(y1)
+
 
             id = int(obj["id"])
             class_name = obj["class"]
@@ -115,10 +112,18 @@ class ReadRecordVideo(QThread):
                         thickness=thickness + 1)
             cv2.putText(img_cpy, text, (x0, y0 + txt_size[1]), font, font_scale, txt_color_light, thickness=thickness)
         return img_cpy
+
+    def clearRecord(self):
+        cap = self.cap
+        print(cap.isOpened())
+        if cap.isOpened():
+            cap.release()
+            print('结束录屏播放')
+            print(cap.isOpened())
+
     def run(self):
         time.sleep(1)
         while True:
-            print('ReadRecordVideo run')
             tm=time.time()
             if self.pause_process:
                 time.sleep(1)
@@ -132,8 +137,7 @@ class ReadRecordVideo(QThread):
                         video_pos = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
                         if str(video_pos) in self.outkeyDic:
                             _labelmeXml = self.outkeyDic[str(video_pos)]
-                            frame = self.draw_results(baseframe, _labelmeXml)
-
+                            self.draw_results(baseframe, _labelmeXml)
 
                         self.showRecordpic.emit(cv2.resize(baseframe, (500, 350)))
                         print('recorde run')

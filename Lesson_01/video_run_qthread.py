@@ -19,6 +19,7 @@ class VideoRunQThread(QThread):
         self.pause_process=False
         self.selectROIFrame=None
         self.showMaskFrame=False
+        self.changeVideUrlAndSendToDeep=False
         self.roiRect=None
         self.cap=None
         self.frame_height=0
@@ -48,15 +49,29 @@ class VideoRunQThread(QThread):
             self.frame_width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
             self.frame_height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
             self.send_video_info.emit('w:'+str(self.frame_width)+'h:'+str(self.frame_height))
-            pass
-        self.pause_process = False
+            self.pause_process = False
+            self.roiRect = None
+            self.changeVideUrlAndSendToDeep = True
+        else:
+            print('重新设置视频路径',url)
+
+
+
 
     def makeHikHostoryByTm(self,tm):
         # tm = datetime(2023, 9, 16, 18, 24, 40)
         self.pause_process=True
         self.cap=None
         self.cap = self.makeHistoryHikCamByData(tm)
-        self.pause_process = False
+        if self.cap.isOpened():
+            self.frame_width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+            self.frame_height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            self.send_video_info.emit('w:' + str(self.frame_width) + 'h:' + str(self.frame_height))
+            self.pause_process = False
+            self.roiRect = None
+            self.changeVideUrlAndSendToDeep=True
+        else:
+            print('重新设置视频为监控时时')
 
     def makeHistoryHikCamByData(self,tm):
         # tm参数为指定时间，为空就是一个小时钱的数据
@@ -83,7 +98,8 @@ class VideoRunQThread(QThread):
             detections.append([x, y, w, h])
 
         self.CacheWaitArr.append([baseFrame,roiRect])
-        if len(detections) > 0:
+        if len(detections) > 0 or  self.changeVideUrlAndSendToDeep==True:
+            self.changeVideUrlAndSendToDeep = False
             # 检测到场景动态将缓存帧推到进程中 从排前面的开始
             if len(self.CacheWaitArr) > 1:
                 print('一次推送', len(self.CacheWaitArr))

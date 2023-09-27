@@ -133,7 +133,7 @@ class VideoDeepQthread(QThread):
             else:
                 if len(self.waitFrameUrlArr):
                     self.runTemp(frame_idx)
-                    # print('wait', len(self.waitFrameUrlArr))
+                    print('wait', len(self.waitFrameUrlArr))
                     frame_idx+=1
                     time.sleep(0.3)
                 else:

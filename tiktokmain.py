@@ -62,6 +62,17 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
         self.initData()
 
+    def stopAllQthread(self):
+        print('清理所有进程')
+        self.runQthread.pause_process = True
+        self.deepQthread.resetYoloDetector()
+
+        if self.readRecordVideo is not None:
+            self.readRecordVideo.pause_process=True
+            self.readRecordVideo.clearRecord()
+
+
+        pass
 
     def readVideoButClik(self):
         vid_fm = (".txt")
@@ -69,8 +80,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "choose an image or video file", "./out",
                                                              f"Files({file_list})")
         if file_name:
-            self.deepQthread.pause_process=True
-            self.runQthread.pause_process=True
+            self.stopAllQthread()
+
             self.readRecordVideo=ReadRecordVideo()
             self.readRecordVideo.setFileUrl(file_name)
             self.readRecordVideo.showRecordpic.connect(self.show_frame_pic)
@@ -137,10 +148,10 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def clearbutClik(self):
         print('clearbutClik')
-        self.runQthread.pause_process = True
-        self.deepQthread.pause_process = True
+        self.stopAllQthread()
 
     def hikcamhisitoryClik(self):
+        self.stopAllQthread()
         time_str = self.timeEdit.time().toString('hh:mm:ss')
         date_str = self.dateEdit.date().toString('yyyy-MM-dd')
         print(f'Date: {date_str}, Time: {time_str}')
@@ -195,21 +206,31 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread.start()
 
 
-
+    saveFileShape=None
     def saveRecordVideoByFrame(self,vframe):
         # print('saveRecordVideoByFrame')
-
+        (th, tw, tn) = vframe.shape
         if self.writerVideoFile is None:
+            self.saveFileShape=(th, tw, tn)
             print('创建文件,out/tiktok.mp4')
             self.writerVideoFile = cv2.VideoWriter("out/tiktok.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 10.0,
-                                                   (vframe.shape[1], vframe.shape[0]))
+                                                   (tw,th))
+        else:
+            (sh, sw, sn) = self.saveFileShape
+            if not (sh== th and sw==tw):
+                print('重新创建视频保存')
+                self.writerVideoFile.release()
+                self.writerVideoFile=None
+                self.saveRecordVideoByFrame(vframe)
+
+                return
 
         self.writerVideoFile.write(vframe)
 
-        print('写入文件')
 
 
     def pushSelectFile(self,value):
+        self.stopAllQthread()
         self.deepQthread.resetYoloDetector()
         self.runQthread.setVideoPath(value)
 
