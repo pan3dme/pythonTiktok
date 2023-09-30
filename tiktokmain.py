@@ -16,6 +16,7 @@ from PyQt5.QtCore import QEvent, Qt, QTimer, pyqtSignal, QPoint, QRect, QDate, Q
 from PyQt5.QtGui import QPixmap, QPainter, QLinearGradient, QColor, QImage
 from PyQt5.QtWidgets import QMainWindow, QTreeWidget, QWidget, QMenu, QLabel
 
+from Lesson_01.gopro_video import GoproVideo
 from Lesson_01.mainmousekey import MainWindowMouseKey
 from Lesson_01.read_record_video import ReadRecordVideo
 from Lesson_01.ui_mainwindow import Ui_MainWindow
@@ -35,6 +36,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.deepQthread=None
         self.readRecordVideo=None
         self.writerVideoFile =None
+        self.goproVideo=None
 
 
 
@@ -52,6 +54,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.checkBoxSaveVideo.clicked.connect(self.checkBoxSaveVideoClik)
         self.capStopCheck.clicked.connect(self.capStopCheckClik)
         self.deepStopCheck.clicked.connect(self.deepStopCheckClik)
+        self.showgoprovideo.clicked.connect(self.showgoprovideoClik)
 
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
@@ -63,6 +66,18 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
         self.initData()
 
+    def showgoprovideoClik(self):
+
+        isDown=self.showgoprovideo.isChecked()
+        print('showgoprovideoClik', isDown)
+        if self.goproVideo is None:
+            print('创建进程GoproVideo')
+            self.goproVideo = GoproVideo()
+            self.goproVideo.start()
+            self.goproVideo.showDeepFrame.connect(self.showDeepFrame)
+
+
+        pass
     def stopAllQthread(self):
         print('清理所有进程')
         self.runQthread.pause_process = True
@@ -185,7 +200,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def showDeepFrame(self, value):
         # self.saveRecordVideoByFrame(value)
-        qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_RGB888)
+        qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_RGB32)
         self.deepframe.setPixmap(QPixmap.fromImage(qImage))
 
 

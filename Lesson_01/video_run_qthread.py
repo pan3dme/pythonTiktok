@@ -133,9 +133,11 @@ class VideoRunQThread(QThread):
                     if self.roiRect != None:
                         (x, y, w, h) = self.roiRect
                         rectFrame = baseFrame[int(y * baseFrame.shape[0]): int(h * baseFrame.shape[0]), int(x * baseFrame.shape[1]):int(w * baseFrame.shape[1])]
+                        mask = self.object_detector.apply(rectFrame)
+                    else:
+                        mask = self.object_detector.apply(baseFrame)
 
 
-                    mask = self.object_detector.apply(baseFrame)
                     mask = self.filter_img(mask)
                     if self.roiRect != None:
                         self.mathToDeep(baseFrame,rectFrame, mask,self.roiRect)
@@ -147,8 +149,21 @@ class VideoRunQThread(QThread):
                         (x,y,w,h)=self.roiRect
                         cv2.rectangle(showFrame, (int(x * showFrame.shape[1]), int(y *showFrame.shape[0])), (int(w * showFrame.shape[1]), int(h *showFrame.shape[0])), (255, 0, 0), 1)
                     if self.showMaskFrame:
-                        mask=cv2.resize(mask, (500, 350))
-                        self.show_pic.emit(cv2.merge((mask, mask, mask)))
+                        if self.roiRect != None:
+                            tempmask = cv2.merge((mask, mask, mask))
+                            (x, y, w, h) = self.roiRect
+                            tx=(int(x * showFrame.shape[1]))
+                            ty=(int(y * showFrame.shape[0]))
+                            showFrame = cv2.resize(baseFrame, (baseFrame.shape[1], baseFrame.shape[0]))
+                            showFrame[ty:tempmask.shape[0]+ty,tx:tempmask.shape[1]+tx]=tempmask[0:tempmask.shape[0],0:tempmask.shape[1]]
+
+                            self.show_pic.emit( cv2.resize(showFrame, (500, 350)))
+
+                        else:
+                            mask = cv2.resize(mask, (500, 350))
+                            tempImg = cv2.merge((mask, mask, mask))
+                            self.show_pic.emit(tempImg)
+
                     else:
                         self.show_pic.emit(cv2.resize(showFrame, (500, 350)))
 

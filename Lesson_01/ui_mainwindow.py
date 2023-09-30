@@ -8,13 +8,11 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-
 from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
 from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget, QRadioButton, QCheckBox, QComboBox, QTimeEdit, \
     QDateEdit, QSlider
 
 # pyside6-uic mainwindow.ui > ui_mainwindow.py
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -39,16 +37,16 @@ class Ui_MainWindow(object):
         self.deepframe.setAlignment(Qt.AlignCenter)
         self.radioButton = QRadioButton(self.centralwidget)
         self.radioButton.setObjectName(u"radioButton")
-        self.radioButton.setGeometry(QRect(740, 460, 95, 19))
+        self.radioButton.setGeometry(QRect(720, 670, 95, 19))
         self.checkBoxShowRoiRect = QCheckBox(self.centralwidget)
         self.checkBoxShowRoiRect.setObjectName(u"checkBoxShowRoiRect")
         self.checkBoxShowRoiRect.setGeometry(QRect(720, 260, 121, 19))
         self.checkBox_2 = QCheckBox(self.centralwidget)
         self.checkBox_2.setObjectName(u"checkBox_2")
-        self.checkBox_2.setGeometry(QRect(750, 620, 80, 19))
+        self.checkBox_2.setGeometry(QRect(730, 750, 80, 19))
         self.radioButton_2 = QRadioButton(self.centralwidget)
         self.radioButton_2.setObjectName(u"radioButton_2")
-        self.radioButton_2.setGeometry(QRect(740, 510, 95, 19))
+        self.radioButton_2.setGeometry(QRect(720, 700, 95, 19))
         self.historycombox = QComboBox(self.centralwidget)
         self.historycombox.addItem("")
         self.historycombox.addItem("")
@@ -106,6 +104,9 @@ class Ui_MainWindow(object):
         self.capStopCheck = QCheckBox(self.centralwidget)
         self.capStopCheck.setObjectName(u"capStopCheck")
         self.capStopCheck.setGeometry(QRect(720, 360, 121, 19))
+        self.showgoprovideo = QCheckBox(self.centralwidget)
+        self.showgoprovideo.setObjectName(u"showgoprovideo")
+        self.showgoprovideo.setGeometry(QRect(720, 430, 121, 19))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -143,5 +144,6 @@ class Ui_MainWindow(object):
         self.readVideoBut.setText(QCoreApplication.translate("MainWindow", u"\u8bfb\u53d6\u8bb0\u5f55", None))
         self.deepStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6682\u505c", None))
         self.capStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u89c6\u9891\u6682\u505c", None))
+        self.showgoprovideo.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793aGopro", None))
     # retranslateUi
 
