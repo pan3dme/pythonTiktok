@@ -2,9 +2,10 @@ import time
 
 import cv2
 from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtGui import QImage
 from ffpyplayer.player import MediaPlayer
 class GoproVideo(QThread):
-    showDeepFrame = pyqtSignal(object)
+    showMediaFrame = pyqtSignal(object)
 
     def __init__(self):
         super(GoproVideo, self).__init__()
@@ -12,47 +13,33 @@ class GoproVideo(QThread):
         self.threadFlag = True
         self.pause_process=False
 
-        self.cap = cv2.VideoCapture(self.video_path)
+        self.player = MediaPlayer(self.video_path)
+        # self.player.set_output_pix_fmt((250,250))
 
-    # video_path = 'rtmp://192.168.31.35:1935/live/test'
-    video_path = 'D:\pythontiktok\data\sound.mp4'
-    playerSound=None
+
+    video_path = 'rtmp://192.168.31.35:1935/live/test'
+    # video_path = 'D:\pythontiktok\data\sound.mp4'
+
     def playMedialPlayerSound(self):
-        self.playerSound = MediaPlayer(self.video_path)
-
+        pass
     def distoy(self):
-
-
-        self.player.close_player()
-
         self.exit()
 
     def run(self):
         time.sleep(1.0)
+
         while self.threadFlag:
             if self.pause_process is False:
-                cap = self.cap
-                if cap.isOpened():
-                    tm = time.time()
-                    capFps = self.cap.get(cv2.CAP_PROP_FPS)
-                    capPos = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
-                    ret, baseframe = cap.read()
-                    if ret:
-                        self.showDeepFrame.emit(cv2.resize(baseframe, (500, 350)))
-                    else:
-                        cap.release()
-
-                    tm=(time.time() - tm)+(1.0/50.0)
-                    if tm<1/capFps:
-                        time.sleep(1/capFps-tm)
-                    # print(capFps,capPos,tm)
+                time.sleep(1./30.)
+                frame,  val = self.player.get_frame()
+                if frame is not None:
+                    print(val)
+                    self.showMediaFrame.emit(frame)
                 else:
-                    cap.release()
-                    time.sleep(1 / 20)
-                    print('cap ie error')
+                    print('err')
 
 
             else:
-                time.sleep(1.0)
+                time.sleep(0.1)
 
 

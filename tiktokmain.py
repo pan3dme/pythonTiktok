@@ -86,7 +86,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
                 print('创建进程GoproVideo')
                 self.goproVideo = GoproVideo()
                 self.goproVideo.start()
-                self.goproVideo.showDeepFrame.connect(self.showDeepFrame)
+                self.goproVideo.showMediaFrame.connect(self.showMediaFrame)
                 self.goproVideo.pause_process = False
         else:
             if self.goproVideo is not None:
@@ -219,6 +219,15 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_BGR888)
         self.capframe.setPixmap(QPixmap.fromImage(qImage))
 
+
+
+    def showMediaFrame(self, value):
+
+        img, t = value
+        qimg = QImage(bytes(img.to_bytearray()[0]), img.get_size()[0], img.get_size()[1],
+                           QImage.Format_RGB888)
+        qimg=qimg.scaled(500, 350, QtCore.Qt.KeepAspectRatio)
+        self.deepframe.setPixmap(QPixmap.fromImage(qimg))
 
 
     def showDeepFrame(self, value):
