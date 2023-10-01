@@ -55,6 +55,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.capStopCheck.clicked.connect(self.capStopCheckClik)
         self.deepStopCheck.clicked.connect(self.deepStopCheckClik)
         self.showgoprovideo.clicked.connect(self.showgoprovideoClik)
+        self.showGoproSound.clicked.connect(self.showGoproSoundClik)
 
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
@@ -66,15 +67,35 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
         self.initData()
 
+    def showGoproSoundClik(self):
+        isDown = self.showGoproSound.isChecked()
+        if self.goproVideo is not None:
+            if isDown:
+                self.goproVideo.playMedialPlayerSound()
+                print('播放声音')
+
+            else:
+                pass
+
     def showgoprovideoClik(self):
 
         isDown=self.showgoprovideo.isChecked()
         print('showgoprovideoClik', isDown)
-        if self.goproVideo is None:
-            print('创建进程GoproVideo')
-            self.goproVideo = GoproVideo()
-            self.goproVideo.start()
-            self.goproVideo.showDeepFrame.connect(self.showDeepFrame)
+        if isDown:
+            if self.goproVideo is None:
+                print('创建进程GoproVideo')
+                self.goproVideo = GoproVideo()
+                self.goproVideo.start()
+                self.goproVideo.showDeepFrame.connect(self.showDeepFrame)
+                self.goproVideo.pause_process = False
+        else:
+            if self.goproVideo is not None:
+                self.goproVideo.pause_process=True
+                self.goproVideo.distoy()
+                self.goproVideo=None
+
+
+
 
 
         pass
@@ -195,12 +216,15 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.videoinfolabel.setText(value)
         pass
     def show_frame_pic(self, value):
-        qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_RGB888)
+        qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_BGR888)
         self.capframe.setPixmap(QPixmap.fromImage(qImage))
 
+
+
     def showDeepFrame(self, value):
-        # self.saveRecordVideoByFrame(value)
-        qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_RGB32)
+
+        qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_BGR888)
+
         self.deepframe.setPixmap(QPixmap.fromImage(qImage))
 
 

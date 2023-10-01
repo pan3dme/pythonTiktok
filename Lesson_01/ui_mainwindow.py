@@ -8,12 +8,12 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
+
 from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
 from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget, QRadioButton, QCheckBox, QComboBox, QTimeEdit, \
     QDateEdit, QSlider
 
 # pyside6-uic mainwindow.ui > ui_mainwindow.py
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -107,6 +107,9 @@ class Ui_MainWindow(object):
         self.showgoprovideo = QCheckBox(self.centralwidget)
         self.showgoprovideo.setObjectName(u"showgoprovideo")
         self.showgoprovideo.setGeometry(QRect(720, 430, 121, 19))
+        self.showGoproSound = QCheckBox(self.centralwidget)
+        self.showGoproSound.setObjectName(u"showGoproSound")
+        self.showGoproSound.setGeometry(QRect(720, 460, 121, 19))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -145,5 +148,6 @@ class Ui_MainWindow(object):
         self.deepStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6682\u505c", None))
         self.capStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u89c6\u9891\u6682\u505c", None))
         self.showgoprovideo.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793aGopro", None))
+        self.showGoproSound.setText(QCoreApplication.translate("MainWindow", u"gopro\u58f0\u97f3", None))
     # retranslateUi
 

@@ -372,6 +372,19 @@
      <string>显示Gopro</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="showGoproSound">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>460</y>
+      <width>121</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>gopro声音</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
