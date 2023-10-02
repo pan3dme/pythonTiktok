@@ -71,10 +71,11 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         isDown = self.showGoproSound.isChecked()
         if self.goproVideo is not None:
             if isDown:
-                self.goproVideo.playMedialPlayerSound()
+                self.goproVideo.setVolume(0)
                 print('播放声音')
 
             else:
+                self.goproVideo.setVolume(1)
                 pass
 
     def showgoprovideoClik(self):
@@ -85,14 +86,18 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             if self.goproVideo is None:
                 print('创建进程GoproVideo')
                 self.goproVideo = GoproVideo()
-                self.goproVideo.start()
+                # 'D:\pythontiktok\data\sound.mp4'
+                # 'rtmp://192.168.31.35:1935/live/test'
+                self.goproVideo.setVideoUrl('rtmp://192.168.31.35:1935/live/test')
                 self.goproVideo.showMediaFrame.connect(self.showMediaFrame)
-                self.goproVideo.pause_process = False
+                self.goproVideo.start()
+
+
+
         else:
             if self.goproVideo is not None:
-                self.goproVideo.pause_process=True
-                self.goproVideo.distoy()
-                self.goproVideo=None
+
+                 pass
 
 
 
