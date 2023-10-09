@@ -7,12 +7,13 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
+
 from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
 from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget, QRadioButton, QCheckBox, QComboBox, QTimeEdit, \
-    QDateEdit, QSlider
+    QDateEdit, QSlider, QVBoxLayout
+
 
 # pyside6-uic mainwindow.ui > ui_mainwindow.py
-
 
 
 class Ui_MainWindow(object):
@@ -39,9 +40,6 @@ class Ui_MainWindow(object):
         self.radioButton = QRadioButton(self.centralwidget)
         self.radioButton.setObjectName(u"radioButton")
         self.radioButton.setGeometry(QRect(720, 670, 95, 19))
-        self.checkBoxShowRoiRect = QCheckBox(self.centralwidget)
-        self.checkBoxShowRoiRect.setObjectName(u"checkBoxShowRoiRect")
-        self.checkBoxShowRoiRect.setGeometry(QRect(720, 260, 121, 19))
         self.checkBox_2 = QCheckBox(self.centralwidget)
         self.checkBox_2.setObjectName(u"checkBox_2")
         self.checkBox_2.setGeometry(QRect(730, 750, 80, 19))
@@ -78,7 +76,7 @@ class Ui_MainWindow(object):
         self.horizontalSlider.setObjectName(u"horizontalSlider")
         self.horizontalSlider.setGeometry(QRect(650, 220, 191, 22))
         self.horizontalSlider.setMinimum(1)
-        self.horizontalSlider.setMaximum(30)
+        self.horizontalSlider.setMaximum(100)
         self.horizontalSlider.setValue(10)
         self.horizontalSlider.setOrientation(Qt.Horizontal)
         self.clearbut = QPushButton(self.centralwidget)
@@ -90,27 +88,51 @@ class Ui_MainWindow(object):
         self.roiBut = QToolButton(self.centralwidget)
         self.roiBut.setObjectName(u"roiBut")
         self.roiBut.setGeometry(QRect(740, 30, 81, 31))
-        self.checkBoxShowMaskFrame = QCheckBox(self.centralwidget)
-        self.checkBoxShowMaskFrame.setObjectName(u"checkBoxShowMaskFrame")
-        self.checkBoxShowMaskFrame.setGeometry(QRect(720, 290, 121, 19))
-        self.checkBoxSaveVideo = QCheckBox(self.centralwidget)
-        self.checkBoxSaveVideo.setObjectName(u"checkBoxSaveVideo")
-        self.checkBoxSaveVideo.setGeometry(QRect(720, 320, 121, 19))
         self.readVideoBut = QToolButton(self.centralwidget)
         self.readVideoBut.setObjectName(u"readVideoBut")
         self.readVideoBut.setGeometry(QRect(650, 30, 81, 31))
-        self.deepStopCheck = QCheckBox(self.centralwidget)
-        self.deepStopCheck.setObjectName(u"deepStopCheck")
-        self.deepStopCheck.setGeometry(QRect(720, 390, 121, 19))
-        self.capStopCheck = QCheckBox(self.centralwidget)
-        self.capStopCheck.setObjectName(u"capStopCheck")
-        self.capStopCheck.setGeometry(QRect(720, 360, 121, 19))
         self.showgoprovideo = QCheckBox(self.centralwidget)
         self.showgoprovideo.setObjectName(u"showgoprovideo")
-        self.showgoprovideo.setGeometry(QRect(720, 430, 121, 19))
+        self.showgoprovideo.setGeometry(QRect(720, 540, 121, 19))
         self.showGoproSound = QCheckBox(self.centralwidget)
         self.showGoproSound.setObjectName(u"showGoproSound")
-        self.showGoproSound.setGeometry(QRect(720, 460, 121, 19))
+        self.showGoproSound.setGeometry(QRect(720, 570, 121, 19))
+        self.widget = QWidget(self.centralwidget)
+        self.widget.setObjectName(u"widget")
+        self.widget.setGeometry(QRect(710, 250, 121, 181))
+        self.verticalLayout = QVBoxLayout(self.widget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.showprogressbar = QCheckBox(self.widget)
+        self.showprogressbar.setObjectName(u"showprogressbar")
+
+        self.verticalLayout.addWidget(self.showprogressbar)
+
+        self.checkBoxShowRoiRect = QCheckBox(self.widget)
+        self.checkBoxShowRoiRect.setObjectName(u"checkBoxShowRoiRect")
+
+        self.verticalLayout.addWidget(self.checkBoxShowRoiRect)
+
+        self.checkBoxShowMaskFrame = QCheckBox(self.widget)
+        self.checkBoxShowMaskFrame.setObjectName(u"checkBoxShowMaskFrame")
+
+        self.verticalLayout.addWidget(self.checkBoxShowMaskFrame)
+
+        self.checkBoxSaveVideo = QCheckBox(self.widget)
+        self.checkBoxSaveVideo.setObjectName(u"checkBoxSaveVideo")
+
+        self.verticalLayout.addWidget(self.checkBoxSaveVideo)
+
+        self.capStopCheck = QCheckBox(self.widget)
+        self.capStopCheck.setObjectName(u"capStopCheck")
+
+        self.verticalLayout.addWidget(self.capStopCheck)
+
+        self.deepStopCheck = QCheckBox(self.widget)
+        self.deepStopCheck.setObjectName(u"deepStopCheck")
+
+        self.verticalLayout.addWidget(self.deepStopCheck)
+
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -125,7 +147,6 @@ class Ui_MainWindow(object):
         self.toolButton.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6587\u4ef6", None))
         self.deepframe.setText(QCoreApplication.translate("MainWindow", u"\u8ddf\u8e2a\u68c0\u6d4b", None))
         self.radioButton.setText(QCoreApplication.translate("MainWindow", u"RadioButton", None))
-        self.checkBoxShowRoiRect.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u9009\u62e9\u533a\u57df", None))
         self.checkBox_2.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u68c0\u6d4b", None))
         self.radioButton_2.setText(QCoreApplication.translate("MainWindow", u"RadioButton", None))
         self.historycombox.setItemText(0, QCoreApplication.translate("MainWindow", u"1\u4e2a\u5c0f\u65f6\u524d", None))
@@ -143,12 +164,14 @@ class Ui_MainWindow(object):
         self.clearbut.setText(QCoreApplication.translate("MainWindow", u"\u6e05\u7406\u6240\u6709\u8fdb\u7a0b", None))
         self.videoinfolabel.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.roiBut.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u533a\u57df", None))
-        self.checkBoxShowMaskFrame.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u68c0\u6d4bmask", None))
-        self.checkBoxSaveVideo.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58\u8bc6\u522b\u89c6\u9891", None))
         self.readVideoBut.setText(QCoreApplication.translate("MainWindow", u"\u8bfb\u53d6\u8bb0\u5f55", None))
-        self.deepStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6682\u505c", None))
-        self.capStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u89c6\u9891\u6682\u505c", None))
         self.showgoprovideo.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793aGopro", None))
         self.showGoproSound.setText(QCoreApplication.translate("MainWindow", u"gopro\u58f0\u97f3", None))
+        self.showprogressbar.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u89c6\u9891\u8fdb\u5ea6", None))
+        self.checkBoxShowRoiRect.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u9009\u62e9\u533a\u57df", None))
+        self.checkBoxShowMaskFrame.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u68c0\u6d4bmask", None))
+        self.checkBoxSaveVideo.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58\u8bc6\u522b\u89c6\u9891", None))
+        self.capStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u89c6\u9891\u6682\u505c", None))
+        self.deepStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6682\u505c", None))
     # retranslateUi
 

@@ -56,6 +56,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.deepStopCheck.clicked.connect(self.deepStopCheckClik)
         self.showgoprovideo.clicked.connect(self.showgoprovideoClik)
         self.showGoproSound.clicked.connect(self.showGoproSoundClik)
+        self.showprogressbar.clicked.connect(self.showprogressbarClik)
 
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
@@ -67,6 +68,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
         self.initData()
 
+    def showprogressbarClik(self):
+        isDown = self.showprogressbar.isChecked()
+
+        self.runQthread.showProgress(isDown)
+        print(isDown)
+        pass
     def showGoproSoundClik(self):
         isDown = self.showGoproSound.isChecked()
         if self.goproVideo is not None:

@@ -29,6 +29,7 @@ class VideoRunQThread(QThread):
         self.fpsPlayNum10 = 10.0
         self.fpsMc = FpsMc()
         self.showRoiRectLine=False
+        self.showProgressTxt=False
         self.object_detector = cv2.createBackgroundSubtractorMOG2(history=500, varThreshold=40, detectShadows=True)
 
     def setRoiRect(self,value):
@@ -110,6 +111,23 @@ class VideoRunQThread(QThread):
             if len(self.CacheWaitArr) > self.CacheNum10:
                 del self.CacheWaitArr[0]
 
+    def drawVideProgress(self, frame, str):
+        (tx,ty,_)=frame.shape
+
+        frame= cv2.putText(frame, str, (50, tx-50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        return cv2.putText(frame, str, (50, tx-50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1, cv2.LINE_AA)
+
+    def showProgress(self,value):
+        self.showProgressTxt=value
+        pass
+    def sendToUiPanle(self,frame,cap):
+        if self.showProgressTxt:
+            countNUm =  cap.get(cv2.CAP_PROP_FRAME_COUNT)
+            if countNUm > 1:
+                tempStr = str(int( cap.get(cv2.CAP_PROP_POS_FRAMES))) + '/' + str(int(countNUm))
+                frame = self.drawVideProgress(frame, tempStr)
+
+        self.show_pic.emit(cv2.resize(frame, (500, 350)))
 
     def run(self):
 
@@ -157,15 +175,21 @@ class VideoRunQThread(QThread):
                             showFrame = cv2.resize(baseFrame, (baseFrame.shape[1], baseFrame.shape[0]))
                             showFrame[ty:tempmask.shape[0]+ty,tx:tempmask.shape[1]+tx]=tempmask[0:tempmask.shape[0],0:tempmask.shape[1]]
 
-                            self.show_pic.emit( cv2.resize(showFrame, (500, 350)))
+
+
+                            self.sendToUiPanle(showFrame,self.cap)
 
                         else:
                             mask = cv2.resize(mask, (500, 350))
                             tempImg = cv2.merge((mask, mask, mask))
-                            self.show_pic.emit(tempImg)
+
+                            self.sendToUiPanle(tempImg,self.cap)
 
                     else:
-                        self.show_pic.emit(cv2.resize(showFrame, (500, 350)))
+
+
+
+                        self.sendToUiPanle(showFrame,self.cap)
 
                 waitTm = time.time() - tm
                 waitTm = max(0, ( 1.0/self.fpsPlayNum10-waitTm))

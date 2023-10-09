@@ -85,19 +85,6 @@
      <string>RadioButton</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBoxShowRoiRect">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>260</y>
-      <width>121</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>显示选择区域</string>
-    </property>
-   </widget>
    <widget class="QCheckBox" name="checkBox_2">
     <property name="geometry">
      <rect>
@@ -246,7 +233,7 @@
      <number>1</number>
     </property>
     <property name="maximum">
-     <number>30</number>
+     <number>100</number>
     </property>
     <property name="value">
      <number>10</number>
@@ -294,32 +281,6 @@
      <string>选择区域</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBoxShowMaskFrame">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>290</y>
-      <width>121</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>显示检测mask</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBoxSaveVideo">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>320</y>
-      <width>121</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>保存识别视频</string>
-    </property>
-   </widget>
    <widget class="QToolButton" name="readVideoBut">
     <property name="geometry">
      <rect>
@@ -333,37 +294,11 @@
      <string>读取记录</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="deepStopCheck">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>390</y>
-      <width>121</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>检测暂停</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="capStopCheck">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>360</y>
-      <width>121</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>视频暂停</string>
-    </property>
-   </widget>
    <widget class="QCheckBox" name="showgoprovideo">
     <property name="geometry">
      <rect>
       <x>720</x>
-      <y>430</y>
+      <y>540</y>
       <width>121</width>
       <height>19</height>
      </rect>
@@ -376,7 +311,7 @@
     <property name="geometry">
      <rect>
       <x>720</x>
-      <y>460</y>
+      <y>570</y>
       <width>121</width>
       <height>19</height>
      </rect>
@@ -384,6 +319,60 @@
     <property name="text">
      <string>gopro声音</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>250</y>
+      <width>121</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QCheckBox" name="showprogressbar">
+       <property name="text">
+        <string>显示视频进度</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxShowRoiRect">
+       <property name="text">
+        <string>显示选择区域</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxShowMaskFrame">
+       <property name="text">
+        <string>显示检测mask</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxSaveVideo">
+       <property name="text">
+        <string>保存识别视频</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="capStopCheck">
+       <property name="text">
+        <string>视频暂停</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="deepStopCheck">
+       <property name="text">
+        <string>检测暂停</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>
