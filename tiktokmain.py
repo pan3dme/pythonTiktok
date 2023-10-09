@@ -134,6 +134,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             self.readRecordVideo=ReadRecordVideo()
             self.readRecordVideo.setFileUrl(file_name)
             self.readRecordVideo.showRecordpic.connect(self.show_frame_pic)
+            self.readRecordVideo.showRightRoleArr.connect(self.showRightRoleArr)
             self.readRecordVideo.start()
 
 
@@ -226,6 +227,9 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         pass
     def send_video_info(self, value):
         self.videoinfolabel.setText(value)
+        pass
+    def showRightRoleArr(self, value):
+        print('showRightRoleArr',value)
         pass
     def show_frame_pic(self, value):
         qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_BGR888)

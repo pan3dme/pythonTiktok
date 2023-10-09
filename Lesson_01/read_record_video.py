@@ -5,9 +5,12 @@ import cv2
 import numpy as np
 from PyQt5.QtCore import QThread, pyqtSignal
 
+from Lesson_01.meshrolexml import MeshRoleXml
+
 
 class ReadRecordVideo(QThread):
     showRecordpic = pyqtSignal(object)
+    showRightRoleArr = pyqtSignal(list)
     def __init__(self):
         super(ReadRecordVideo, self).__init__()
 
@@ -45,7 +48,7 @@ class ReadRecordVideo(QThread):
         print(value)
         self.filePathUrl=value
 
-
+        MeshRoleXml.get_instance().clearData( )
         tempFile = open(self.filePathUrl)
         self.tempDeleKey = []
         self.outkeyDic = {}
@@ -129,7 +132,7 @@ class ReadRecordVideo(QThread):
                 time.sleep(1)
             else:
                 cap= self.cap
-                print(cap.isOpened())
+
                 if  cap.isOpened():
                     ret, baseframe = cap.read()
                     if ret:
@@ -137,9 +140,13 @@ class ReadRecordVideo(QThread):
                         video_pos = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
                         if str(video_pos) in self.outkeyDic:
                             _labelmeXml = self.outkeyDic[str(video_pos)]
+
+                            MeshRoleXml.get_instance().pushXmlData(_labelmeXml)
+
                             self.draw_results(baseframe, _labelmeXml)
 
                         self.showRecordpic.emit(cv2.resize(baseframe, (500, 350)))
-                        print('recorde run')
+                        self.showRightRoleArr.emit(MeshRoleXml.get_instance().rightItem)
+
 
                 time.sleep(1/10)

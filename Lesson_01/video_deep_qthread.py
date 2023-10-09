@@ -8,6 +8,7 @@ import numpy as np
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
+from Lesson_01.meshrolexml import MeshRoleXml
 from src.models.tracking.deep_sort import DeepSort
 from src.utils.general import ROOT, add_image_id
 from src.models.detection.yolov8_detector_onnx import YoloDetector
@@ -30,6 +31,9 @@ class VideoDeepQthread(QThread):
             temp["bbox"] = temp["bbox"].tolist()
             (x, y, w, h) = rect
             temp["rect"] = [x, y, w, h]
+
+
+
         return str(json.dumps(arr))
 
     def makedir(self, dir_path):
@@ -71,6 +75,7 @@ class VideoDeepQthread(QThread):
 
     def resetYoloDetector(self):
         self.waitFrameUrlArr.clear()
+        MeshRoleXml.get_instance().clearData()
         print('resetYoloDetector')
 
     def _init_yolo(self):
@@ -83,7 +88,7 @@ class VideoDeepQthread(QThread):
 
     def _init_tracker(self):
 
-        self.tracker = DeepSort(
+        self.tracker = DeepSort(max_age=10,
             model_path=os.path.join(ROOT, f"src/models/tracking/deep_sort/deep/checkpoint/ckpt.t7"))
 
     def runTemp(self, idx):
@@ -106,6 +111,8 @@ class VideoDeepQthread(QThread):
             detection_results=model_output,
             ori_img=cutFrame)
         model_output = add_image_id(model_output, idx)
+
+        MeshRoleXml.get_instance().pushXmlData(model_output)
 
 
         if self.saveVideo:
