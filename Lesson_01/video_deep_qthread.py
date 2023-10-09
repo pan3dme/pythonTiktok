@@ -17,7 +17,7 @@ from src.models.detection.yolov8_detector_onnx import YoloDetector
 class VideoDeepQthread(QThread):
     showDeepFrame = pyqtSignal(object)
     saveRecordVideoByFrame = pyqtSignal(object)
-
+    showRightRoleArr = pyqtSignal(list)
     def filter_img(self, frame):
         kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (3, 3))
         _, thresh = cv.threshold(frame, 20, 255, cv.THRESH_BINARY)
@@ -113,6 +113,7 @@ class VideoDeepQthread(QThread):
         model_output = add_image_id(model_output, idx)
 
         MeshRoleXml.get_instance().pushXmlData(model_output)
+        self.showRightRoleArr.emit(MeshRoleXml.get_instance().rightItem)
 
 
         if self.saveVideo:

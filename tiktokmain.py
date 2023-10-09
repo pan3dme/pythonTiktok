@@ -16,6 +16,7 @@ from PyQt5.QtCore import QEvent, Qt, QTimer, pyqtSignal, QPoint, QRect, QDate, Q
 from PyQt5.QtGui import QPixmap, QPainter, QLinearGradient, QColor, QImage
 from PyQt5.QtWidgets import QMainWindow, QTreeWidget, QWidget, QMenu, QLabel
 
+from Lesson_01.aliyunlinkitmodel import AliyunLinkModel
 from Lesson_01.gopro_video import GoproVideo
 from Lesson_01.mainmousekey import MainWindowMouseKey
 from Lesson_01.read_record_video import ReadRecordVideo
@@ -57,6 +58,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.showgoprovideo.clicked.connect(self.showgoprovideoClik)
         self.showGoproSound.clicked.connect(self.showGoproSoundClik)
         self.showprogressbar.clicked.connect(self.showprogressbarClik)
+        # self.showprogressbar.clicked()
 
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
@@ -229,7 +231,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.videoinfolabel.setText(value)
         pass
     def showRightRoleArr(self, value):
-        print('showRightRoleArr',value)
+        # print('showRightRoleArr',value)
+        AliyunLinkModel.get_instance().pingLink(len(value))
         pass
     def show_frame_pic(self, value):
         qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_BGR888)
@@ -267,10 +270,13 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             confidence_threshold=0.1,
             iou_threshold=0.15)
         self.deepQthread.showDeepFrame.connect(self.showDeepFrame)
+        self.deepQthread.showRightRoleArr.connect(self.showRightRoleArr)
         self.deepQthread.saveRecordVideoByFrame.connect(self.saveRecordVideoByFrame)
         self.deepQthread.start()
 
         self.runQthread = VideoRunQThread()
+        self.showprogressbar.setChecked(True)
+        self.showprogressbarClik()
         self.runQthread.send_info.connect(self.send_frame)
         self.runQthread.show_pic.connect(self.show_frame_pic)
 
@@ -278,6 +284,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread.sendFrameInfo.connect(self.deepQthread.sendFrameInfo)
 
         self.runQthread.start()
+
+        AliyunLinkModel.get_instance()
 
 
     saveFileShape=None
