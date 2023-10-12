@@ -58,10 +58,15 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.showgoprovideo.clicked.connect(self.showgoprovideoClik)
         self.showGoproSound.clicked.connect(self.showGoproSoundClik)
         self.showprogressbar.clicked.connect(self.showprogressbarClik)
-        # self.showprogressbar.clicked()
+
+
+
+
 
         self.dateEdit.setDate(QDate.currentDate())
         self.timeEdit.setTime(QTime.currentTime())
+
+        self.saveFileName.setText( datetime.now().strftime("%Y%m%dt%H%M")+'.mp4')
 
         self.historycombox.currentIndexChanged.connect(self.on_combobox_func)
         self.on_combobox_func()
@@ -272,6 +277,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.deepQthread.showDeepFrame.connect(self.showDeepFrame)
         self.deepQthread.showRightRoleArr.connect(self.showRightRoleArr)
         self.deepQthread.saveRecordVideoByFrame.connect(self.saveRecordVideoByFrame)
+        self.deepQthread.saveRecordTxtByStr.connect(self.saveRecordTxtByStr)
         self.deepQthread.start()
 
         self.runQthread = VideoRunQThread()
@@ -283,6 +289,9 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread.send_video_info.connect(self.send_video_info)
         self.runQthread.sendFrameInfo.connect(self.deepQthread.sendFrameInfo)
 
+
+
+
         self.runQthread.start()
 
         AliyunLinkModel.get_instance()
@@ -290,13 +299,19 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
     saveFileShape=None
+    def saveRecordTxtByStr(self,value):
+        filename=self.saveFileName.text().replace('.mp4','.txt')
+        strUrl = "out/"+filename
+        with open(strUrl, 'a') as f:
+            f.write(value)
+
     def saveRecordVideoByFrame(self,vframe):
-        # print('saveRecordVideoByFrame')
+
+        filename = self.saveFileName.text()
         (th, tw, tn) = vframe.shape
         if self.writerVideoFile is None:
             self.saveFileShape=(th, tw, tn)
-            print('创建文件,out/tiktok.mp4')
-            self.writerVideoFile = cv2.VideoWriter("out/tiktok.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 10.0,
+            self.writerVideoFile = cv2.VideoWriter("out/"+filename, cv2.VideoWriter_fourcc(*'mp4v'), 10.0,
                                                    (tw,th))
         else:
             (sh, sw, sn) = self.saveFileShape

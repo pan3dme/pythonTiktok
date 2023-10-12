@@ -17,6 +17,7 @@ from src.models.detection.yolov8_detector_onnx import YoloDetector
 class VideoDeepQthread(QThread):
     showDeepFrame = pyqtSignal(object)
     saveRecordVideoByFrame = pyqtSignal(object)
+    saveRecordTxtByStr = pyqtSignal(str)
     showRightRoleArr = pyqtSignal(list)
 
     def filter_img(self, frame):
@@ -121,9 +122,11 @@ class VideoDeepQthread(QThread):
             (th,tw,tn)=baseFrame.shape
             addTextStr = str(self.frameRecordIdx) + "||" + self.fillet_arr(model_output, (int(x*tw), int(y*th),int( w*tw),int( h*th))) + "\n"
             self.frameRecordIdx+=1
-            strUrl = "out/tiktok.txt"
-            with open(strUrl, 'a') as f:
-                f.write(addTextStr)
+
+            self.saveRecordTxtByStr.emit(addTextStr)
+            # strUrl = "out/tiktok.txt"
+            # with open(strUrl, 'a') as f:
+            #     f.write(addTextStr)
 
         self.draw_results(cutFrame, model_output)
         self.showDeepFrame.emit(cv.resize(baseFrame, (500, 350)))

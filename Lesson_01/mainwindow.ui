@@ -258,10 +258,10 @@
    <widget class="QLabel" name="videoinfolabel">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>20</y>
-      <width>291</width>
-      <height>41</height>
+      <x>530</x>
+      <y>0</y>
+      <width>141</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="text">
@@ -320,13 +320,13 @@
      <string>gopro声音</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>710</x>
       <y>250</y>
       <width>121</width>
-      <height>181</height>
+      <height>223</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -355,6 +355,13 @@
       <widget class="QCheckBox" name="checkBoxSaveVideo">
        <property name="text">
         <string>保存识别视频</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="saveFileName">
+       <property name="text">
+        <string>tiktok.mp4</string>
        </property>
       </widget>
      </item>

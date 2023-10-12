@@ -8,9 +8,11 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
+
+
 from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
 from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget, QRadioButton, QCheckBox, QComboBox, QTimeEdit, \
-    QDateEdit, QSlider, QVBoxLayout
+    QDateEdit, QSlider, QVBoxLayout, QLineEdit
 
 
 # pyside6-uic mainwindow.ui > ui_mainwindow.py
@@ -84,7 +86,7 @@ class Ui_MainWindow(object):
         self.clearbut.setGeometry(QRect(200, 810, 91, 41))
         self.videoinfolabel = QLabel(self.centralwidget)
         self.videoinfolabel.setObjectName(u"videoinfolabel")
-        self.videoinfolabel.setGeometry(QRect(550, 20, 291, 41))
+        self.videoinfolabel.setGeometry(QRect(530, 0, 141, 81))
         self.roiBut = QToolButton(self.centralwidget)
         self.roiBut.setObjectName(u"roiBut")
         self.roiBut.setGeometry(QRect(740, 30, 81, 31))
@@ -97,38 +99,43 @@ class Ui_MainWindow(object):
         self.showGoproSound = QCheckBox(self.centralwidget)
         self.showGoproSound.setObjectName(u"showGoproSound")
         self.showGoproSound.setGeometry(QRect(720, 570, 121, 19))
-        self.widget = QWidget(self.centralwidget)
-        self.widget.setObjectName(u"widget")
-        self.widget.setGeometry(QRect(710, 250, 121, 181))
-        self.verticalLayout = QVBoxLayout(self.widget)
+        self.layoutWidget = QWidget(self.centralwidget)
+        self.layoutWidget.setObjectName(u"layoutWidget")
+        self.layoutWidget.setGeometry(QRect(710, 250, 121, 223))
+        self.verticalLayout = QVBoxLayout(self.layoutWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.showprogressbar = QCheckBox(self.widget)
+        self.showprogressbar = QCheckBox(self.layoutWidget)
         self.showprogressbar.setObjectName(u"showprogressbar")
 
         self.verticalLayout.addWidget(self.showprogressbar)
 
-        self.checkBoxShowRoiRect = QCheckBox(self.widget)
+        self.checkBoxShowRoiRect = QCheckBox(self.layoutWidget)
         self.checkBoxShowRoiRect.setObjectName(u"checkBoxShowRoiRect")
 
         self.verticalLayout.addWidget(self.checkBoxShowRoiRect)
 
-        self.checkBoxShowMaskFrame = QCheckBox(self.widget)
+        self.checkBoxShowMaskFrame = QCheckBox(self.layoutWidget)
         self.checkBoxShowMaskFrame.setObjectName(u"checkBoxShowMaskFrame")
 
         self.verticalLayout.addWidget(self.checkBoxShowMaskFrame)
 
-        self.checkBoxSaveVideo = QCheckBox(self.widget)
+        self.checkBoxSaveVideo = QCheckBox(self.layoutWidget)
         self.checkBoxSaveVideo.setObjectName(u"checkBoxSaveVideo")
 
         self.verticalLayout.addWidget(self.checkBoxSaveVideo)
 
-        self.capStopCheck = QCheckBox(self.widget)
+        self.saveFileName = QLineEdit(self.layoutWidget)
+        self.saveFileName.setObjectName(u"saveFileName")
+
+        self.verticalLayout.addWidget(self.saveFileName)
+
+        self.capStopCheck = QCheckBox(self.layoutWidget)
         self.capStopCheck.setObjectName(u"capStopCheck")
 
         self.verticalLayout.addWidget(self.capStopCheck)
 
-        self.deepStopCheck = QCheckBox(self.widget)
+        self.deepStopCheck = QCheckBox(self.layoutWidget)
         self.deepStopCheck.setObjectName(u"deepStopCheck")
 
         self.verticalLayout.addWidget(self.deepStopCheck)
@@ -171,6 +178,7 @@ class Ui_MainWindow(object):
         self.checkBoxShowRoiRect.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u9009\u62e9\u533a\u57df", None))
         self.checkBoxShowMaskFrame.setText(QCoreApplication.translate("MainWindow", u"\u663e\u793a\u68c0\u6d4bmask", None))
         self.checkBoxSaveVideo.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58\u8bc6\u522b\u89c6\u9891", None))
+        self.saveFileName.setText(QCoreApplication.translate("MainWindow", u"tiktok.mp4", None))
         self.capStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u89c6\u9891\u6682\u505c", None))
         self.deepStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6682\u505c", None))
     # retranslateUi
