@@ -22,12 +22,17 @@ class AliyunLinkModel(QObject):
         #     "DeviceName": "mobile",
         #     "DeviceSecret": "c4d8ff52c7bb0cbd474ed3ee9b6b0b06"
         # }
+        # {
+        #     "ProductKey": "iq6659GBxxY",
+        #     "DeviceName": "pythontiktok",
+        #     "DeviceSecret": "234810429507b6a8bdc24e7fe752b09b"
+        # }
         print('初始化阿里云物联网------》init BaseLinkModel')
         self.lk = linkkit.LinkKit(
             host_name="cn-shanghai",
             product_key="iq6659GBxxY",
-            device_name="mobile",
-            device_secret="c4d8ff52c7bb0cbd474ed3ee9b6b0b06")
+            device_name="pythontiktok",
+            device_secret="234810429507b6a8bdc24e7fe752b09b")
 
         lk = self.lk
         lk.on_device_dynamic_register = self.on_device_dynamic_register
@@ -143,7 +148,10 @@ class AliyunLinkModel(QObject):
         if self.isTrueconnect:
             print('发送', val)
             lk = self.lk
-            lk.publish_topic(lk.to_full_topic("user/msg"), "{\"total\":" + str(val) + "}")
+            # lk.publish_topic(lk.to_full_topic("user/msg"), "{\"total\":" + str(val) + "}")
+            lk.publish_topic('/sys/iq6659GBxxY/pythontiktok/thing/event/property/post', str({ "params": {"total": val}}))
+
+
         else:
             print('阿里云还没准备好')
 

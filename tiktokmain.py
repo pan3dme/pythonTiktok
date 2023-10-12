@@ -288,6 +288,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         AliyunLinkModel.get_instance()
 
 
+
     saveFileShape=None
     def saveRecordVideoByFrame(self,vframe):
         # print('saveRecordVideoByFrame')

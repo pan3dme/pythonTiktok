@@ -18,6 +18,7 @@ class VideoDeepQthread(QThread):
     showDeepFrame = pyqtSignal(object)
     saveRecordVideoByFrame = pyqtSignal(object)
     showRightRoleArr = pyqtSignal(list)
+
     def filter_img(self, frame):
         kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (3, 3))
         _, thresh = cv.threshold(frame, 20, 255, cv.THRESH_BINARY)
@@ -142,6 +143,8 @@ class VideoDeepQthread(QThread):
                 if len(self.waitFrameUrlArr):
                     self.runTemp(frame_idx)
                     print('wait', len(self.waitFrameUrlArr))
+
+
                     frame_idx+=1
                     time.sleep(0.3)
                 else:
