@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HostoryWin</class>
+ <widget class="QMainWindow" name="HostoryWin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>865</width>
+    <height>887</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QComboBox" name="historycombox">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>100</y>
+      <width>101</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>1个小时前</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>2个小时前</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>3个小时前</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>4个小时前</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>今天15点</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>今天16点</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>今天17点</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>今天18点</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QToolButton" name="hikcamhisitory">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>100</y>
+      <width>80</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>监控录像</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="selectfilebut">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>40</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>选择文件</string>
+    </property>
+   </widget>
+   <widget class="QTimeEdit" name="timeEdit">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>150</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QDateEdit" name="dateEdit">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>150</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="capframe">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>500</width>
+      <height>350</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>原始视频</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="videoinfotxt">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>430</y>
+      <width>281</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="hikcambut">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>40</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>时时监控</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
