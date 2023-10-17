@@ -36,11 +36,15 @@ class MainWindow(QtWidgets.QMainWindow,Ui_HostoryWin):
         self.selectfilebut.clicked.connect(self.selectFileClik)
         self.hikcamhisitory.clicked.connect(self.hikcamhisitoryClik)
         self.hikcambut.clicked.connect(self.hikcambutClik)
+        self.playnext10s.clicked.connect(self.playnext10sClik)
 
         self.on_combobox_func()
 
         self.hostoryRun=None
 
+    def playnext10sClik(self):
+        self.hostoryRun.playNext10sFun()
+        pass
     def hikcambutClik(self):
         url = "rtsp://admin:Hik123456@192.168.31.212/Streaming/Channels/2"
 
@@ -64,6 +68,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_HostoryWin):
             self.hostoryRun.show_pic.connect(self.show_frame_pic)
             self.hostoryRun.show_frame_txt.connect(self.show_frame_txt)
             self.hostoryRun.start()
+
             print('创建视频播放进程')
         else:
             self.hostoryRun.pause_process = True

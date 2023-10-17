@@ -60,6 +60,16 @@ class HostoryRunQthread(QThread):
             print('重新设置视频路径',url)
 
 
+    def playNext10sFun(self):
+        print('playNext10sFun')
+        if self.cap.isOpened():
+            print(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES,100.0)
+            print(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
+
+
+
+        pass
 
 
     # def exit(self):
@@ -68,12 +78,13 @@ class HostoryRunQthread(QThread):
 
         
     def makeHikHostoryByTm(self,tm):
-        # tm = datetime(2023, 10, 12, 21, 3, 39)
+        tm = datetime(2023, 10, 14, 23, 19, 0)
+        self.cap = None
+        cv2.waitKey(1000)
+
         self.hostoryStrtTm=tm
         self.pause_process=True
-        self.cap=None
 
-        cv2.waitKey(1000)
 
         self.cap = self.makeHistoryHikCamByData(tm)
 
@@ -105,6 +116,8 @@ class HostoryRunQthread(QThread):
         url = 'rtsp://admin:Hik123456@192.168.31.212/Streaming/tracks/2?starttime=' + startStr + '&endtime=' + endStr
         print(url)
         cap = cv2.VideoCapture(url)
+
+
         return cap
     def mathToDeep(self,baseFrame,rectFrame,mask,roiRect):
         contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -146,17 +159,12 @@ class HostoryRunQthread(QThread):
 
         self.show_pic.emit(cv2.resize(frame, (500, 350)))
 
+        if cap and cap.isOpened():
+            curNum = cap.get(cv2.CAP_PROP_POS_FRAMES)
+            fpsNum = cap.get(cv2.CAP_PROP_FPS)
+            kk = self.hostoryStrtTm + timedelta(seconds=int(curNum / fpsNum))
+            self.show_frame_txt.emit(str(kk))
 
-
-
-        curNum=cap.get(cv2.CAP_PROP_POS_FRAMES)
-        fpsNum=cap.get(cv2.CAP_PROP_FPS)
-
-
-        kk= self.hostoryStrtTm + timedelta(seconds=int(curNum/fpsNum))
-
-
-        self.show_frame_txt.emit(str(kk))
 
     def run(self):
 
@@ -164,10 +172,15 @@ class HostoryRunQthread(QThread):
 
         while True:
             tm=time.time()
+
             if self.pause_process:
                 time.sleep(1)
                 continue
+            if self.cap:
+                print(self.cap.isOpened())
+
             if self.cap and self.cap.isOpened():
+                print(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
                 fps = self.cap.get(cv2.CAP_PROP_FPS)  # 计算视频的帧率
                 # print(fps)
                 # print(self.cap.get(cv2.CAP_PROP_POS_FRAMES),self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -215,8 +228,6 @@ class HostoryRunQthread(QThread):
                             self.sendToUiPanle(tempImg,self.cap)
 
                     else:
-
-
 
                         self.sendToUiPanle(showFrame,self.cap)
 

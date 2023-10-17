@@ -64,7 +64,7 @@ class VideoRunQThread(QThread):
         self.pause_process=True
         self.cap=None
         self.cap = self.makeHistoryHikCamByData(tm)
-   
+
         if self.cap.isOpened():
             self.frame_width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
             self.frame_height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)

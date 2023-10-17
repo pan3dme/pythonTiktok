@@ -152,6 +152,32 @@
      <string>时时监控</string>
     </property>
    </widget>
+   <widget class="QToolButton" name="playnext10s">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>190</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>快进10秒</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="playpre10s">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>190</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>倒退10秒</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

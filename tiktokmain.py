@@ -229,7 +229,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.deepQthread.resetYoloDetector()
 
     def hikcambutClik(self):
-        url = "rtsp://admin:Hik123456@192.168.31.212/Streaming/Channels/2"
+        # url = "rtsp://admin:Hik123456@192.168.31.212/Streaming/Channels/2"
+        url = "rtsp://admin:ZHNSEB@192.168.31.233/Streaming/Channels/2"
         self.pushSelectFile(url)
         pass
     def send_video_info(self, value):
@@ -237,7 +238,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         pass
     def showRightRoleArr(self, value):
         # print('showRightRoleArr',value)
-        AliyunLinkModel.get_instance().pingLink(len(value))
+        AliyunLinkModel.get_instance().pingLink(len(value)+10)
         pass
     def show_frame_pic(self, value):
         qImage = QImage(value.data, value.shape[1], value.shape[0], QImage.Format_BGR888)

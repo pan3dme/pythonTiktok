@@ -8,11 +8,15 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
+
+
 from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
 from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget, QRadioButton, QCheckBox, QComboBox, QTimeEdit, \
     QDateEdit, QSlider, QVBoxLayout, QLineEdit
 
 # pyside6-uic hostory_main.ui > ui_hostory.py
+
+
 
 
 class Ui_HostoryWin(object):
@@ -55,6 +59,12 @@ class Ui_HostoryWin(object):
         self.hikcambut = QToolButton(self.centralwidget)
         self.hikcambut.setObjectName(u"hikcambut")
         self.hikcambut.setGeometry(QRect(750, 40, 81, 41))
+        self.playnext10s = QToolButton(self.centralwidget)
+        self.playnext10s.setObjectName(u"playnext10s")
+        self.playnext10s.setGeometry(QRect(740, 190, 81, 41))
+        self.playpre10s = QToolButton(self.centralwidget)
+        self.playpre10s.setObjectName(u"playpre10s")
+        self.playpre10s.setGeometry(QRect(640, 190, 81, 41))
         HostoryWin.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(HostoryWin)
@@ -78,5 +88,7 @@ class Ui_HostoryWin(object):
         self.capframe.setText(QCoreApplication.translate("HostoryWin", u"\u539f\u59cb\u89c6\u9891", None))
         self.videoinfotxt.setText(QCoreApplication.translate("HostoryWin", u"TextLabel", None))
         self.hikcambut.setText(QCoreApplication.translate("HostoryWin", u"\u65f6\u65f6\u76d1\u63a7", None))
+        self.playnext10s.setText(QCoreApplication.translate("HostoryWin", u"\u5feb\u8fdb10\u79d2", None))
+        self.playpre10s.setText(QCoreApplication.translate("HostoryWin", u"\u5012\u900010\u79d2", None))
     # retranslateUi
 
