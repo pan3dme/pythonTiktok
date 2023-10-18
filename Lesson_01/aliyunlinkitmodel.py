@@ -9,6 +9,9 @@ class AliyunLinkModel(QObject):
     __instance = None
     topimessgeFun = pyqtSignal(str)
     selectID = 5
+
+
+
     def __init__(self):
         if AliyunLinkModel.__instance is None:
             AliyunLinkModel.__instance = self
@@ -16,6 +19,8 @@ class AliyunLinkModel(QObject):
             raise Exception("Singleton class instantiated more than once")
 
         self.isTrueconnect = False
+        self.hikUrl = 'admin:ZHNSEB@192.168.31.231'
+        # self.hikUrl='admin:Hik123456@192.168.31.212'
 
         # {
         #     "ProductKey": "iq6659GBxxY",

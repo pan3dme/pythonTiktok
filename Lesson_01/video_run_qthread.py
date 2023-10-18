@@ -5,6 +5,8 @@ import cv2
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from datetime import datetime, timedelta
+
+from Lesson_01.aliyunlinkitmodel import AliyunLinkModel
 from dele.fps_mc import FpsMc
 
 
@@ -75,6 +77,8 @@ class VideoRunQThread(QThread):
         else:
             print('重新设置视频为监控时时')
 
+    hikUrl = 'admin:ZHNSEB@192.168.31.231'
+    # hikUrl='admin:Hik123456@192.168.31.212'
     def makeHistoryHikCamByData(self,tm):
         # tm参数为指定时间，为空就是一个小时钱的数据
         base_time = datetime.now()
@@ -86,7 +90,8 @@ class VideoRunQThread(QThread):
         startStr = start_time.strftime("%Y%m%dt%H%M%Sz")
         endStr = end_time.strftime("%Y%m%dt%H%M%Sz")
         print(startStr, endStr)
-        url = 'rtsp://admin:Hik123456@192.168.31.212/Streaming/tracks/2?starttime='+startStr+'&endtime='+endStr
+        # url = 'rtsp://'+self.hikUrl+'/Streaming/tracks/2?starttime='+startStr+'&endtime='+endStr
+        url = 'rtsp://'+AliyunLinkModel.get_instance().hikUrl +'/Streaming/tracks/2?starttime='+startStr+'&endtime='+endStr
         print(url)
         cap = cv2.VideoCapture(url)
         return cap
@@ -94,7 +99,7 @@ class VideoRunQThread(QThread):
         contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         detections = []
         for contour in contours:
-            if cv2.contourArea(contour) < 25:
+            if cv2.contourArea(contour) < 100:
                 continue
             (x, y, w, h) = cv2.boundingRect(contour)
             detections.append([x, y, w, h])

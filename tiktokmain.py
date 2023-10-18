@@ -228,9 +228,11 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread.makeHikHostoryByTm(tm)
         self.deepQthread.resetYoloDetector()
 
+
     def hikcambutClik(self):
         # url = "rtsp://admin:Hik123456@192.168.31.212/Streaming/Channels/2"
-        url = "rtsp://admin:ZHNSEB@192.168.31.233/Streaming/Channels/2"
+        # url = "rtsp://admin:ZHNSEB@192.168.31.233/Streaming/Channels/2"
+        url="rtsp://"+AliyunLinkModel.get_instance().hikUrl+"/Streaming/Channels/2"
         self.pushSelectFile(url)
         pass
     def send_video_info(self, value):
