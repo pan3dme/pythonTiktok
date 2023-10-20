@@ -1,0 +1,7 @@
+path: D:\pythontiktok\out\20231020t1536\screenshot
+train: train/images
+val: valid/images
+test: test/images
+nc: 1
+names:
+- sheep

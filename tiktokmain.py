@@ -72,6 +72,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.on_combobox_func()
         self.horizontalSlider.valueChanged.connect(self.valuechange)
 
+        self.selectCamcombox.currentIndexChanged.connect(self.selectCamcomboxfunc)
+        self.selectCamcomboxfunc()
 
         self.initData()
 
@@ -188,6 +190,16 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.runQthread.fpsPlayNum10=size
         print(size)
 
+    def selectCamcomboxfunc(self):
+        combobox = self.selectCamcombox
+
+        if combobox.currentIndex()==0:
+            AliyunLinkModel.get_instance().hikUrl = 'admin:Hik123456@192.168.31.212'
+        else:
+            AliyunLinkModel.get_instance().hikUrl = 'admin:ZHNSEB@192.168.31.231:554'
+
+        print(AliyunLinkModel.get_instance().hikUrl)
+
     def on_combobox_func(self):
         combobox=self.historycombox
         print('select',combobox.currentIndex())
@@ -273,6 +285,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
     def initData(self):
         self.deepQthread = VideoDeepQthread()
         model_name = 'D:\\ultralytics-main\\runs\detect\\train15\weights\\best.onnx'
+        model_name = 'D:\pythonscore\YOLOv8-DeepSort-PyQt-GUI-main\weights\detection\yolov8n.onnx'
         self.deepQthread.set_start_config(
             model_name=model_name,
             confidence_threshold=0.1,

@@ -9,7 +9,6 @@
 ################################################################################
 
 
-
 from PyQt5.QtCore import QRect, Qt, QCoreApplication, QMetaObject
 from PyQt5.QtWidgets import QToolButton, QPushButton, QLabel, QWidget, QRadioButton, QCheckBox, QComboBox, QTimeEdit, \
     QDateEdit, QSlider, QVBoxLayout, QLineEdit
@@ -140,6 +139,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.deepStopCheck)
 
+        self.selectCamcombox = QComboBox(self.centralwidget)
+        self.selectCamcombox.addItem("")
+        self.selectCamcombox.addItem("")
+        self.selectCamcombox.setObjectName(u"selectCamcombox")
+        self.selectCamcombox.setGeometry(QRect(720, 790, 101, 40))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -181,5 +185,8 @@ class Ui_MainWindow(object):
         self.saveFileName.setText(QCoreApplication.translate("MainWindow", u"tiktok.mp4", None))
         self.capStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u89c6\u9891\u6682\u505c", None))
         self.deepStopCheck.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6682\u505c", None))
+        self.selectCamcombox.setItemText(0, QCoreApplication.translate("MainWindow", u"212", None))
+        self.selectCamcombox.setItemText(1, QCoreApplication.translate("MainWindow", u"231", None))
+
     # retranslateUi
 

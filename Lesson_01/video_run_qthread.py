@@ -77,9 +77,18 @@ class VideoRunQThread(QThread):
         else:
             print('重新设置视频为监控时时')
 
-    hikUrl = 'admin:ZHNSEB@192.168.31.231'
-    # hikUrl='admin:Hik123456@192.168.31.212'
+
     def makeHistoryHikCamByData(self,tm):
+        # tm参数为指定时间，为空就是一个小时钱的数据
+
+        startStr = tm.strftime("%Y%m%dt%H%M%S+08:00")
+
+        url='rtsp://'+AliyunLinkModel.get_instance().hikUrl+'/Streaming/tracks/101?starttime='+startStr
+
+        print(url)
+        cap = cv2.VideoCapture(url)
+        return cap
+    def makeHistoryHikCamByData_COPY(self,tm):
         # tm参数为指定时间，为空就是一个小时钱的数据
         base_time = datetime.now()
         base_time += timedelta(hours=-8)
@@ -91,7 +100,10 @@ class VideoRunQThread(QThread):
         endStr = end_time.strftime("%Y%m%dt%H%M%Sz")
         print(startStr, endStr)
         # url = 'rtsp://'+self.hikUrl+'/Streaming/tracks/2?starttime='+startStr+'&endtime='+endStr
-        url = 'rtsp://'+AliyunLinkModel.get_instance().hikUrl +'/Streaming/tracks/2?starttime='+startStr+'&endtime='+endStr
+
+        # url = 'rtsp://'+AliyunLinkModel.get_instance().hikUrl +'/Streaming/tracks/2?starttime='+startStr+'&endtime='+endStr
+        url = 'rtsp://'+AliyunLinkModel.get_instance().hikUrl +'/Streaming/tracks/101??starttime='+startStr
+
         print(url)
         cap = cv2.VideoCapture(url)
         return cap
@@ -127,7 +139,11 @@ class VideoRunQThread(QThread):
         self.showProgressTxt=value
         pass
     def sendToUiPanle(self,frame,cap):
+        if not cap or not cap.isOpened():
+            return
+
         if self.showProgressTxt:
+
             countNUm =  cap.get(cv2.CAP_PROP_FRAME_COUNT)
             if countNUm > 1:
                 tempStr = str(int( cap.get(cv2.CAP_PROP_POS_FRAMES))) + '/' + str(int(countNUm))

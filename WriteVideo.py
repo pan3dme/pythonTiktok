@@ -20,7 +20,8 @@ class CamWriteVideo(BaseWriteVideo):
         # videoBaseUrl = "D:/pythonscore/YOLOv8-DeepSort-PyQt-GUI-main/data/TownCentreXVID.avi"
         # videoBaseUrl = "D:/pythonscore/YOLOv8-DeepSort-PyQt-GUI-main/data/hikCam_001.MP4"
         # videoBaseUrl = "D:/pythonscore/YOLOv8-DeepSort-PyQt-GUI-main/data/doorsheep.MP4"
-        videoBaseUrl = "D:/pythonscore/YOLOv8-DeepSort-PyQt-GUI-main/data/hikCam_001.MP4"
+        # videoBaseUrl = "D:/pythonscore/YOLOv8-DeepSort-PyQt-GUI-main/data/hikCam_001.MP4"
+        videoBaseUrl = "D:/pythontiktok/data/10月20日.mp4"
         # videoBaseUrl = "D:/gopro/GX051784.MP4"
         cap = cv2.VideoCapture(videoBaseUrl)
         frame_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)

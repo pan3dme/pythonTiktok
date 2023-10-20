@@ -106,8 +106,8 @@ class BaseWriteVideo():
 
         file_process_thread = self.file_process_thread
         saveFrameNum = 0
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 430)
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 1400)
+
         while cap.isOpened():
             tm=time.time()
 
@@ -135,7 +135,7 @@ class BaseWriteVideo():
 
                     # print(x, y, w, h)
 
-                cv2.imshow('resized_img', dele.base_data.instance.showFps(resized_img))
+                cv2.imshow('resized_img', dele.base_data.instance.showFps(cv2.resize(resized_img, (int(frame_width * 0.3), int(frame_height * 0.3)))))
                 if showmask:
                     cv2.imshow('mask', mask)
                     cv2.imshow('applymask', applymask)

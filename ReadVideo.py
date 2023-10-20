@@ -12,7 +12,8 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 # sampleRole=BaseDrawSampleRole('sheep002')
 # sampleRole=BaseDrawSampleRole('mul_yolo')
-sampleRole=BaseDrawSampleRole('s_dele')
+# sampleRole=BaseDrawSampleRole('s_dele')
+sampleRole=BaseDrawSampleRole('20231020t1536')
 
 
 match 1:
