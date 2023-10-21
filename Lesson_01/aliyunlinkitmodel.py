@@ -19,7 +19,8 @@ class AliyunLinkModel(QObject):
             raise Exception("Singleton class instantiated more than once")
 
         self.isTrueconnect = False
-        self.hikUrl = 'admin:ZHNSEB@192.168.31.231'
+        self.urlArr=['admin:Hik123456@192.168.31.212','admin:ZHNSEB@192.168.31.232:554']
+        self.hikUrl =self.urlArr[0]
         # self.hikUrl='admin:Hik123456@192.168.31.212'
 
         # {

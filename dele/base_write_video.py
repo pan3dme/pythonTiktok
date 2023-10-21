@@ -96,13 +96,10 @@ class BaseWriteVideo():
 
         self.makedir(outMp4url)
 
-        _saveVideoSize=(int(frame_width * 1), int(frame_height * 1))
-        if frame_width>1200:
-             _saveVideoSize= (int(frame_width * 1200./frame_width), int(frame_height * 1200./frame_width))
 
-        if isSaveFile:
-            self.writerFile = cv2.VideoWriter(outMp4url, cv2.VideoWriter_fourcc(*'mp4v'), 25.0,
-                                              _saveVideoSize)
+         # _saveVideoSize= (int(frame_width * 1200./frame_width), int(frame_height * 1200./frame_width))
+
+
 
         file_process_thread = self.file_process_thread
         saveFrameNum = 0
@@ -114,7 +111,7 @@ class BaseWriteVideo():
             ret, capframe = cap.read()
             if ret:
                 if frame_width > 1000:
-                    capframe= cv2.resize(capframe, _saveVideoSize)
+                    capframe= cv2.resize(capframe,  (int(frame_width * 1000./frame_width), int(frame_height * 1000./frame_width)))
 
                 resized_img = cv2.resize(capframe, Size480_320)
                 applymask =self.object_detector.apply(resized_img)
@@ -175,6 +172,14 @@ class BaseWriteVideo():
                 if len(file_process_thread.needShowFrameArr) > 1:
                     saveFrameNum = saveFrameNum + 1
                     if isSaveFile:
+                        if self.writerFile is None:
+                            (th, tw, tn) = baseframe.shape
+                            print('创建视频文件大小',tw, th)
+
+                            self.writerFile = cv2.VideoWriter(outMp4url, cv2.VideoWriter_fourcc(*'mp4v'), 25.0,
+                                                              (tw, th))
+
+
                         self.writerFile.write(baseframe)
                         addTextStr = str(video_pos) + "||" + self.fillet_arr(vinfo) + "\n"
                         strUrl="out/" + saveName + ".txt"

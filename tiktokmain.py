@@ -194,9 +194,9 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         combobox = self.selectCamcombox
 
         if combobox.currentIndex()==0:
-            AliyunLinkModel.get_instance().hikUrl = 'admin:Hik123456@192.168.31.212'
+            AliyunLinkModel.get_instance().hikUrl = AliyunLinkModel.get_instance().urlArr[0]
         else:
-            AliyunLinkModel.get_instance().hikUrl = 'admin:ZHNSEB@192.168.31.231:554'
+            AliyunLinkModel.get_instance().hikUrl = AliyunLinkModel.get_instance().urlArr[1]
 
         print(AliyunLinkModel.get_instance().hikUrl)
 

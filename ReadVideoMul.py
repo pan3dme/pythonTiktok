@@ -15,10 +15,11 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 _mulArr=[]
 
-_mulArr.append(BaseDrawSampleRole('mul_yolo'))
-_mulArr.append(BaseDrawSampleRole('mul_self'))
-_mulArr.append(BaseDrawSampleRole('mul_yolo2'))
-# _mulArr.append(BaseDrawSampleRole('ccav'))
+# _mulArr.append(BaseDrawSampleRole('mul_yolo'))
+# _mulArr.append(BaseDrawSampleRole('mul_self'))
+# _mulArr.append(BaseDrawSampleRole('mul_yolo2'))
+_mulArr.append(BaseDrawSampleRole('s_dele'))
+_mulArr.append(BaseDrawSampleRole('yolov8n'))
 
 
 _baseDraw= _mulArr[0]

@@ -188,13 +188,13 @@ class CamWriteVideo(BaseWriteVideo):
 
 if __name__ == '__main__':
 
-    onnxName = 'D:\\ultralytics-main\\runs\detect\\train20\weights\\best.onnx'
-    # onnxName='D:\pythonscore\YOLOv8-DeepSort-PyQt-GUI-main\weights\detection\yolov8n.onnx'
+    # onnxName = 'D:\\ultralytics-main\\runs\detect\\train20\weights\\best.onnx'
+    onnxName='D:\pythonscore\YOLOv8-DeepSort-PyQt-GUI-main\weights\detection\yolov8n.onnx'
     mainWindow = CamWriteVideo(onnxName)
     _selectTyp=1
     match _selectTyp:
         case 1:
-            mainWindow.runLocaVdeo("s_dele")
+            mainWindow.runLocaVdeo("yolov8n")
         case 2:
             mainWindow.runPcCamVdeo("pccam002")
         case 3:
