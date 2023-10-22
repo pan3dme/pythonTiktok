@@ -250,6 +250,10 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
     def send_video_info(self, value):
         self.videoinfolabel.setText(value)
         pass
+    def showWaitItemLen(self, value):
+        if self.runQthread is not  None:
+            self.runQthread.setDeepWaitLen(value)
+        pass
     def showRightRoleArr(self, value):
         # print('showRightRoleArr',value)
         AliyunLinkModel.get_instance().pingLink(len(value)+10)
@@ -292,6 +296,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             iou_threshold=0.15)
         self.deepQthread.showDeepFrame.connect(self.showDeepFrame)
         self.deepQthread.showRightRoleArr.connect(self.showRightRoleArr)
+        self.deepQthread.showWaitItemLen.connect(self.showWaitItemLen)
         self.deepQthread.saveRecordVideoByFrame.connect(self.saveRecordVideoByFrame)
         self.deepQthread.saveRecordTxtByStr.connect(self.saveRecordTxtByStr)
         self.deepQthread.start()

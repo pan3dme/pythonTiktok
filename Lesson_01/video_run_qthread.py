@@ -32,6 +32,7 @@ class VideoRunQThread(QThread):
         self.fpsMc = FpsMc()
         self.showRoiRectLine=False
         self.showProgressTxt=False
+        self.waitDeepLen=0
         self.object_detector = cv2.createBackgroundSubtractorMOG2(history=500, varThreshold=40, detectShadows=True)
 
     def setRoiRect(self,value):
@@ -81,9 +82,12 @@ class VideoRunQThread(QThread):
     def makeHistoryHikCamByData(self,tm):
         # tm参数为指定时间，为空就是一个小时钱的数据
 
+        end_time = tm+ timedelta(minutes=10)
         startStr = tm.strftime("%Y%m%dt%H%M%S+08:00")
+        endStr = end_time.strftime("%Y%m%dt%H%M%S+08:00")
 
-        url='rtsp://'+AliyunLinkModel.get_instance().hikUrl+'/Streaming/tracks/101?starttime='+startStr
+        # url='rtsp://'+AliyunLinkModel.get_instance().hikUrl+'/Streaming/tracks/101?starttime='+startStr
+        url='rtsp://'+AliyunLinkModel.get_instance().hikUrl+'/Streaming/tracks/101?starttime='+startStr+'&endtime='+endStr
 
         print(url)
         cap = cv2.VideoCapture(url)
@@ -150,27 +154,29 @@ class VideoRunQThread(QThread):
                 frame = self.drawVideProgress(frame, tempStr)
 
         self.show_pic.emit(cv2.resize(frame, (500, 350)))
-
+    def setDeepWaitLen(self,value):
+        self.waitDeepLen=value
+        pass
     def run(self):
 
         time.sleep(1)
 
         while True:
             tm=time.time()
-            if self.pause_process:
+            if self.pause_process or self.waitDeepLen>100:
                 time.sleep(1)
                 continue
             if self.cap and self.cap.isOpened():
                 fps = self.cap.get(cv2.CAP_PROP_FPS)  # 计算视频的帧率
-                # print(fps)
-                # print(self.cap.get(cv2.CAP_PROP_POS_FRAMES),self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                print('fps',fps)
+                print(self.cap.get(cv2.CAP_PROP_POS_FRAMES),'/',self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 ret, capframe = self.cap.read()
                 if ret:
                     # 初始限制视频的尺寸
                     baseFrame = cv2.resize(capframe, (1000, 700))
                     self.selectROIFrame=baseFrame
 
-                    if self.roiRect != None:
+                    if self.roiRect is not None:
                         (x, y, w, h) = self.roiRect
                         rectFrame = baseFrame[int(y * baseFrame.shape[0]): int(h * baseFrame.shape[0]), int(x * baseFrame.shape[1]):int(w * baseFrame.shape[1])]
                         mask = self.object_detector.apply(rectFrame)
@@ -179,17 +185,17 @@ class VideoRunQThread(QThread):
 
 
                     mask = self.filter_img(mask)
-                    if self.roiRect != None:
+                    if self.roiRect is not None :
                         self.mathToDeep(baseFrame,rectFrame, mask,self.roiRect)
                         pass
 
                     showFrame=baseFrame
                     self.fpsMc.showFps(showFrame,tx=150,ty=25,scaleFont=0.7)
-                    if self.roiRect !=  None and self.showRoiRectLine:
+                    if self.roiRect is not  None and self.showRoiRectLine:
                         (x,y,w,h)=self.roiRect
                         cv2.rectangle(showFrame, (int(x * showFrame.shape[1]), int(y *showFrame.shape[0])), (int(w * showFrame.shape[1]), int(h *showFrame.shape[0])), (255, 0, 0), 1)
                     if self.showMaskFrame:
-                        if self.roiRect != None:
+                        if self.roiRect is not None:
                             tempmask = cv2.merge((mask, mask, mask))
                             (x, y, w, h) = self.roiRect
                             tx=(int(x * showFrame.shape[1]))
