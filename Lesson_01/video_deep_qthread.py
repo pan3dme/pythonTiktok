@@ -137,8 +137,6 @@ class VideoDeepQthread(QThread):
 
 
     def run(self):
-
-        time.sleep(1.0)
         frame_idx=0
         while self.threadFlag:
             if self.pause_process:

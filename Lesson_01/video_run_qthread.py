@@ -33,6 +33,7 @@ class VideoRunQThread(QThread):
         self.showRoiRectLine=False
         self.showProgressTxt=False
         self.waitDeepLen=0
+        self.waitDeepMaxLen=10000
         self.object_detector = cv2.createBackgroundSubtractorMOG2(history=500, varThreshold=40, detectShadows=True)
 
     def setRoiRect(self,value):
@@ -86,8 +87,8 @@ class VideoRunQThread(QThread):
         startStr = tm.strftime("%Y%m%dt%H%M%S+08:00")
         endStr = end_time.strftime("%Y%m%dt%H%M%S+08:00")
 
-        # url='rtsp://'+AliyunLinkModel.get_instance().hikUrl+'/Streaming/tracks/101?starttime='+startStr
-        url='rtsp://'+AliyunLinkModel.get_instance().hikUrl+'/Streaming/tracks/101?starttime='+startStr+'&endtime='+endStr
+        url='rtsp://'+AliyunLinkModel.get_instance().hikUrl+'/Streaming/tracks/101?starttime='+startStr
+        # url='rtsp://'+AliyunLinkModel.get_instance().hikUrl+'/Streaming/tracks/101?starttime='+startStr+'&endtime='+endStr
 
         print(url)
         cap = cv2.VideoCapture(url)
@@ -158,19 +159,24 @@ class VideoRunQThread(QThread):
         self.waitDeepLen=value
         pass
     def run(self):
-
-        time.sleep(1)
-
         while True:
             tm=time.time()
-            if self.pause_process or self.waitDeepLen>100:
+            if self.pause_process :
                 time.sleep(1)
                 continue
+
+            # print('self.cap',self.cap)
+            # if self.cap:
+            #     print('cap.isOpened()', self.cap.isOpened())
+
+
             if self.cap and self.cap.isOpened():
                 fps = self.cap.get(cv2.CAP_PROP_FPS)  # 计算视频的帧率
-                print('fps',fps)
-                print(self.cap.get(cv2.CAP_PROP_POS_FRAMES),'/',self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                # print('fps',fps)
+                # print(self.cap.get(cv2.CAP_PROP_POS_FRAMES),'/',self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 ret, capframe = self.cap.read()
+                if not ret:
+                    print('ret',ret)
                 if ret:
                     # 初始限制视频的尺寸
                     baseFrame = cv2.resize(capframe, (1000, 700))
@@ -182,10 +188,11 @@ class VideoRunQThread(QThread):
                         mask = self.object_detector.apply(rectFrame)
                     else:
                         mask = self.object_detector.apply(baseFrame)
+                        rectFrame=None
 
 
                     mask = self.filter_img(mask)
-                    if self.roiRect is not None :
+                    if self.roiRect is not None and baseFrame is not None and rectFrame is not None:
                         self.mathToDeep(baseFrame,rectFrame, mask,self.roiRect)
                         pass
 
@@ -219,9 +226,14 @@ class VideoRunQThread(QThread):
 
                         self.sendToUiPanle(showFrame,self.cap)
 
-                waitTm = time.time() - tm
-                waitTm = max(0, ( 1.0/self.fpsPlayNum10-waitTm))
-                time.sleep(waitTm)
+
+                if self.waitDeepLen>self.waitDeepMaxLen:
+                    time.sleep(1.5)
+                else:
+                    waitTm = time.time() - tm
+                    waitTm = max(0, (1.0 / self.fpsPlayNum10 - waitTm))
+                    time.sleep(waitTm)
+
 
             else:
                 time.sleep(1)

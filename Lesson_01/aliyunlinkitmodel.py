@@ -20,6 +20,9 @@ class AliyunLinkModel(QObject):
 
         self.isTrueconnect = False
         self.urlArr=['admin:Hik123456@192.168.31.212','admin:ZHNSEB@192.168.31.232:554']
+        self.urlArr = ['admin:Hik123456@192.168.31.212', 'admin:HikYJXVOD@192.168.31.240']
+        self.urlArr = ['admin:Hik123456@192.168.31.212', 'admin:HikYJXVOD@192.168.31.240']
+
         self.hikUrl =self.urlArr[0]
         # self.hikUrl='admin:Hik123456@192.168.31.212'
 
@@ -155,7 +158,7 @@ class AliyunLinkModel(QObject):
             print('发送', val)
             lk = self.lk
             # lk.publish_topic(lk.to_full_topic("user/msg"), "{\"total\":" + str(val) + "}")
-            # lk.publish_topic('/sys/iq6659GBxxY/pythontiktok/thing/event/property/post', str({ "params": {"total": val}}))
+            lk.publish_topic('/sys/iq6659GBxxY/pythontiktok/thing/event/property/post', str({ "params": {"total": val}}))
 
 
         else:

@@ -70,7 +70,10 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
         self.historycombox.currentIndexChanged.connect(self.on_combobox_func)
         self.on_combobox_func()
-        self.horizontalSlider.valueChanged.connect(self.valuechange)
+
+        self.horizontalSlider.valueChanged.connect(self.horizontalSliderChange)
+        self.waitDeepLenSlide.valueChanged.connect(self.waitDeepLenSlideChange)
+
 
         self.selectCamcombox.currentIndexChanged.connect(self.selectCamcomboxfunc)
         self.selectCamcomboxfunc()
@@ -184,11 +187,14 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
         pass
-    def valuechange(self):
-        print("current slider value=%s" % self.horizontalSlider.value())
-        size = self.horizontalSlider.value()
-        self.runQthread.fpsPlayNum10=size
-        print(size)
+    def waitDeepLenSlideChange(self):
+        self.runQthread.waitDeepMaxLen=self.waitDeepLenSlide.value()
+        self.waitdeepnumtxt.setText("%s张" % self.waitDeepLenSlide.value())
+
+    def horizontalSliderChange(self):
+        self.runQthread.fpsPlayNum10=self.horizontalSlider.value()
+        self.fpsnumtxt.setText("%sfps" % self.horizontalSlider.value())
+
 
     def selectCamcomboxfunc(self):
         combobox = self.selectCamcombox
@@ -242,9 +248,9 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
     def hikcambutClik(self):
-        # url = "rtsp://admin:Hik123456@192.168.31.212/Streaming/Channels/2"
-        # url = "rtsp://admin:ZHNSEB@192.168.31.233/Streaming/Channels/2"
-        url="rtsp://"+AliyunLinkModel.get_instance().hikUrl+"/Streaming/Channels/2"
+
+        # url="rtsp://"+AliyunLinkModel.get_instance().hikUrl+"/Streaming/Channels/2"
+        url="rtsp://"+AliyunLinkModel.get_instance().hikUrl+"/Streaming/Channels/1?transport=tcp"
         self.pushSelectFile(url)
         pass
     def send_video_info(self, value):
@@ -349,6 +355,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
     def pushSelectFile(self,value):
+        print(value)
         self.stopAllQthread()
         self.deepQthread.resetYoloDetector()
         self.runQthread.setVideoPath(value)
